@@ -6,16 +6,21 @@
      * @alias ProxyPrimitive
      * @constructor
      *
-     *  Options:
+     *  Position:       Cartesian3 (position in globe)
+     *  Model:          Model to display
+     *  Billboard:      Billboard to display (must be created from BillboardCollection.add() first)
+     *  Options:        
+     *      distance        Distance to change between billboard & model
+     *      fadeDistance    Not working yet
      */
-    var ProxyPrimitive = function(position, options) {
+    var ProxyPrimitive = function(position, model, billboard, options) {
 
         options = Cesium.defaultValue(options, Cesium.defaultValue.EMPTY_OBJECT);
 
         this._position = position;
-        this._model = options.model;
-        this._billboard = options.billboard;
-        this._swapDistance = options.distance;
+        this._model = model;
+        this._billboard = billboard;
+        this._swapDistance = Cesium.defaultValue(options.distance, 100000.0);
         this._fadeDistance = Cesium.defaultValue(options.fadeDistance, 10000.0);
         this._ellipsoid = ellipsoid;
 
