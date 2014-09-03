@@ -602,6 +602,10 @@ define([
         return getRuntime(this, 'materialsByName', name);
     };
 
+    Model.prototype.getMaterials = function() {
+        return (this._runtime['materialsByName']);
+    }
+    
     var nodeAxisScratch = new Cartesian3();
     var nodeTranslationScratch = new Cartesian3();
     var nodeQuaternionScratch = new Quaternion();
