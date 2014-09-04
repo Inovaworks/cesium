@@ -104,9 +104,9 @@
         }
         
         // make it visible
-        this._objects[i].object.show = true;
-        if (defined(this._objects[i].object.update)) {
-            this._objects[i].object.update(context, frameState, commandList);
+        this._objects[objindex].object.show = true;
+        if (Cesium.defined(this._objects[objindex].object.update)) {
+            this._objects[objindex].object.update(context, frameState, commandList);
         }
         
         // fade code disabled for now
