@@ -7,22 +7,30 @@
      * @constructor
      *
      *  Position:       Cartesian3 (position in globe)
-     *  Model:          Model to display
-     *  Billboard:      Billboard to display (must be created from BillboardCollection.add() first)
+     *  Objects:        Object list (all objects must be sorted by distance)
+     *                  Example: {{object: myModel, distance:0;} , {object: myBillboard, distance:10000;}}
      *  Options:        
-     *      distance        Distance to change between billboard & model
      *      fadeDistance    Not working yet
      */
-    var ProxyPrimitive = function(position, model, billboard, options) {
+    var ProxyPrimitive = function(position, objects, options) {
 
+        //>>includeStart('debug', pragmas.debug);
+
+        if (!Cesium.defined(position)) {
+            throw new Cesium.DeveloperError('position is required');
+        }
+
+        if (!Cesium.defined(objects)) {
+            throw new Cesium.DeveloperError('objects is required');
+        }
+
+        //>>includeEnd('debug');
+    
         options = Cesium.defaultValue(options, Cesium.defaultValue.EMPTY_OBJECT);
 
         this._position = position;
-        this._model = model;
-        this._billboard = billboard;
-        this._swapDistance = Cesium.defaultValue(options.distance, 100000.0);
+        this._objects = objects;
         this._fadeDistance = Cesium.defaultValue(options.fadeDistance, 10000.0);
-        this._ellipsoid = ellipsoid;
 
 
         /**
@@ -68,7 +76,7 @@
 
         this._distanceToCamera = Cesium.Cartesian3.distance(this._position, frameState.camera.position);
         
-        var alpha = (this._distanceToCamera - this._swapDistance) / this._fadeDistance;
+        /*var alpha = (this._distanceToCamera - this._swapDistance) / this._fadeDistance;
         if (alpha<0.0) {
             alpha = 0.0;
         }
@@ -77,43 +85,55 @@
             alpha = 1.0;
         }
         
-        alpha = 0.5;
-         
-        
+        alpha = 0.5;*/
+                 
         //console.log ( 'distance: '+this._distanceToCamera  );
         //console.log ( 'alpha: '+alpha  );
-                        
-        if (this._distanceToCamera<this._swapDistance){
         
-            if (this._model.ready) {
-                if (!Cesium.defined(this._materials))
-                {
-                    this._materials = this._model.getMaterials();
-                }
-                
-                /*var obj = this._materials;
-                for (var mat in obj) {
-                    if (obj.hasOwnProperty(mat)) {
-                        obj[mat].setValue('alpha', alpha);
-                    }
-                } */               
+        var len = this._objects.length;
+        var objindex = 0;
+        // select current visible object
+        for (var i=0; i<len; i++)
+        {
+            if (this._objects[i].distance<this._distanceToCamera) {
+                objindex = i;
+            }
+            else  {
+                break;
+            }            
+        }
+        
+        // make it visible
+        this._objects[i].object.show = true;
+        if (defined(this._objects[i].object.update)) {
+            this._objects[i].object.update(context, frameState, commandList);
+        }
+        
+        // fade code disabled for now
+        /*
+        if (this._model.ready) {
+            if (!Cesium.defined(this._materials))
+            {
+                this._materials = this._model.getMaterials();
+            }
+            
+            var obj = this._materials;
+            for (var mat in obj) {
+                if (obj.hasOwnProperty(mat)) {
+                    obj[mat].setValue('alpha', alpha);
+                }              
+            } 
+         }*/               
+                                     
+        // hide everything else
+        for (var i=0; i<len; i++) {
+            if (i!=objindex)
+            {
+                this._objects[i].object.show = false;
             }        
-            
-            //this._model._material.update(context);
-            this._model.show = true;
-            this._billboard.show = false;
-
-            this._model.update(context, frameState, commandList);
         }
-        else {
-
-            this._model.show = false;
-            this._billboard.show = true;
-            //this._billboard.color = new Cesium.Color(1.0, 1.0, 1.0, 1.0 - alpha);
-            
-            //this._billboard.update(context, frameState, commandList);
-        }
-
+                        
+        
      };
 
 
