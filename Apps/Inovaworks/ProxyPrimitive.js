@@ -76,6 +76,11 @@
 
         this._distanceToCamera = Cesium.Cartesian3.distance(this._position, frameState.camera.position);
         
+        if (isNaN(this._distanceToCamera))
+        {
+            return;
+        }
+        
         /*var alpha = (this._distanceToCamera - this._swapDistance) / this._fadeDistance;
         if (alpha<0.0) {
             alpha = 0.0;
