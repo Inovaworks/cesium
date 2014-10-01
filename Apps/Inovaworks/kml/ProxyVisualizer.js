@@ -99,14 +99,14 @@
                     else
                     if (obj.type == "billboard")
                     {
-                        var billboards = this._scene.primitives.add(new Cesium.BillboardCollection());
-
+                        var billboards = this._scene.primitives.add(new Cesium.BillboardCollection());                        
+                        
                         var myBillboard = billboards.add({        
                         show : true,
                         position : position,
-                        image : 'compass_da.png',
-                        scale : 0.25,
-                        color : Cesium.Color.WHITE
+                        image : obj.image,
+                        scale : Cesium.defaultValue(obj.scale, 0.25),
+                        color : Cesium.defaultValue(obj.color, Cesium.Color.WHITE),
                         });
                       
                         subobj = myBillboard;
@@ -203,7 +203,7 @@
 
         for (i = changed.length - 1; i > -1; i--) {
             entity = changed[i];
-            if (defined(entity.proxy) && defined(entity._position)) {
+            if (Cesium.defined(entity.proxy) && Cesium.defined(entity._position)) {
                 entities.set(entity.id, entity);
             } else {
                 _proxyUpdater = entity._proxyUpdater;

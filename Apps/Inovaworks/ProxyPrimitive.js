@@ -69,17 +69,9 @@
         this._lastObject = undefined;
     };
     
-    Cesium.defineProperties(ProxyPrimitive.prototype, {
+    /*Cesium.defineProperties(ProxyPrimitive.prototype, {
         show : {
             set : function(value) {
-                    /*if (value)
-                    {
-                        if (Cesium.defined(this._lastObject))
-                        {
-                            this._lastObject.object.show = true;
-                        }
-                    }
-                    else*/
                     {
                         var len = this._objects.length;
                         for (var i=0; i<len; i++)
@@ -90,13 +82,20 @@
                  }
         }
     
-    });
+    });*/
 
     /**
      * @private
      */
     ProxyPrimitive.prototype.update = function(context, frameState, commandList) {
         if (!this.show) {
+        
+            var len = this._objects.length;
+            for (var i=0; i<len; i++)
+            {
+                this._objects[i].object.show = false;
+            }
+        
             return;
         }
 
