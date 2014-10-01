@@ -64,7 +64,32 @@
          * @default false
          */
         this.debugShowBoundingVolume = Cesium.defaultValue(options.debugShowBoundingVolume, false);
+        
+        this._lastObject = undefined;
     };
+    
+    Cesium.defineProperties(ProxyPrimitive.prototype, {
+        show : {
+            set : function(value) {
+                    /*if (value)
+                    {
+                        if (Cesium.defined(this._lastObject))
+                        {
+                            this._lastObject.object.show = true;
+                        }
+                    }
+                    else*/
+                    {
+                        var len = this._objects.length;
+                        for (var i=0; i<len; i++)
+                        {
+                            this._objects[i].object.show = value;
+                        }
+                    }
+                 }
+        }
+    
+    });
 
     /**
      * @private
@@ -109,9 +134,10 @@
         }
         
         // make it visible
-        this._objects[objindex].object.show = true;
-        if (Cesium.defined(this._objects[objindex].object.update)) {
-            this._objects[objindex].object.update(context, frameState, commandList);
+        this._lastObject = this._objects[objindex];
+        this._lastObject.object.show = true;
+        if (Cesium.defined(this._lastObject.object.update)) {
+            this._lastObject.object.update(context, frameState, commandList);
         }
         
         // fade code disabled for now
