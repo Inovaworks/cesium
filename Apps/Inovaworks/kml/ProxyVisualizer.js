@@ -119,7 +119,7 @@
                 }
                 
             
-                primitive = new ProxyPrimitive(position, objects);
+                primitive = new ProxyPrimitive(position, objects, this._primitives);
                 primitive.id = entity;
                 primitives.add(primitive);
 
@@ -150,6 +150,17 @@
         return false;
     };
 
+    function removePrimitive(entity, hash, primitives) {
+        var data = hash[entity.id];
+        if (Cesium.defined(data)) {
+            var primitive = data.primitive;
+            primitives.remove(primitive);
+            if (!primitive.isDestroyed()) {
+                primitive.destroy();
+            }
+            delete hash[entity.id];
+        }
+    }    
     /**
      * Removes and destroys all primitives created by this instance.
      */
@@ -164,12 +175,16 @@
             }
         }
 
+        var hash = this._hash;
         var entities = entityCollection.entities;
         var length = entities.length;
+        var primitives = this._primitives;
         for (var i = 0; i < length; i++) {
+            removePrimitive(entities[i], hash, primitives);
             entities[i]._proxyUpdater = undefined;
             entities[i]._proxyVisualizerIndex = undefined;
         }
+        
         return Cesium.destroyObject(this);
     };
 
