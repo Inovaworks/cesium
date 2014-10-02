@@ -105,7 +105,7 @@
                         show : true,
                         position : position,
                         image : obj.image,
-                        scale : Cesium.defaultValue(obj.scale, 0.25),
+                        scale : Cesium.defaultValue(obj.scale, 1.0),
                         color : Cesium.defaultValue(obj.color, Cesium.Color.WHITE),
                         });
                       
