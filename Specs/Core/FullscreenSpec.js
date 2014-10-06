@@ -1,10 +1,10 @@
 /*global defineSuite*/
 defineSuite([
-             'Core/Fullscreen',
-             'Core/FeatureDetection'
-         ],function(
-             Fullscreen,
-             FeatureDetection) {
+        'Core/Fullscreen',
+        'Core/FeatureDetection'
+    ], function(
+        Fullscreen,
+        FeatureDetection) {
     "use strict";
     /*global jasmine,describe,xdescribe,it,xit,expect,beforeEach,afterEach,beforeAll,afterAll,spyOn,runs,waits,waitsFor*/
 

@@ -4,10 +4,10 @@
  * @name czm_latitudeToWebMercatorFraction
  * @glslFunction
  *
- * @param {float} The geodetic latitude, in radians.
- * @param {float} The low portion of the Web Mercator coordinate of the southern boundary of the rectangle.
- * @param {float} The high portion of the Web Mercator coordinate of the southern boundary of the rectangle.
- * @param {float} The total height of the rectangle in Web Mercator coordinates.
+ * @param {float} latitude The geodetic latitude, in radians.
+ * @param {float} southMercatorYLow The low portion of the Web Mercator coordinate of the southern boundary of the rectangle.
+ * @param {float} southMercatorYHigh The high portion of the Web Mercator coordinate of the southern boundary of the rectangle.
+ * @param {float} oneOverMercatorHeight The total height of the rectangle in Web Mercator coordinates.
  *
  * @returns {float} The fraction of the rectangle at which the latitude occurs.  If the latitude is the southern
  *          boundary of the rectangle, the return value will be zero.  If it is the northern boundary, the return
@@ -15,7 +15,7 @@
  */ 
 float czm_latitudeToWebMercatorFraction(float latitude, float southMercatorYLow, float southMercatorYHigh, float oneOverMercatorHeight)
 {
-    float sinLatitude = sin(latitude);
+    float sinLatitude = czm_cosineAndSine(latitude).y;
     float mercatorY = 0.5 * log((1.0 + sinLatitude) / (1.0 - sinLatitude));
     
     // mercatorY - southMercatorY in simulated double precision.

@@ -1,98 +1,92 @@
 /*global defineSuite*/
 defineSuite([
-         'Core/BoxGeometry',
-         'Core/CircleGeometry',
-         'Core/CylinderGeometry',
-         'Core/defined',
-         'Core/EllipseGeometry',
-         'Core/EllipsoidGeometry',
-         'Core/SphereGeometry',
-         'Core/RectangleGeometry',
-         'Core/PolygonGeometry',
-         'Core/SimplePolylineGeometry',
-         'Core/PolylineGeometry',
-         'Core/WallGeometry',
-         'Core/CorridorGeometry',
-         'Core/CornerType',
-         'Core/defaultValue',
-         'Core/Geometry',
-         'Core/GeometryAttribute',
-         'Core/GeometryInstance',
-         'Core/ColorGeometryInstanceAttribute',
-         'Core/GeometryInstanceAttribute',
-         'Core/ComponentDatatype',
-         'Core/Cartesian2',
-         'Core/Cartesian3',
-         'Core/Matrix4',
-         'Core/Rectangle',
-         'Core/Ellipsoid',
-         'Core/PrimitiveType',
-         'Core/PolylineVolumeGeometry',
-         'Core/Transforms',
-         'Core/Cartographic',
-         'Core/BoundingSphere',
-         'Core/Math',
-         'Core/Color',
-         'Renderer/ClearCommand',
-         'Scene/PerInstanceColorAppearance',
-         'Scene/PolylineColorAppearance',
-         'Scene/Primitive',
-         'Scene/SceneMode',
-         'Scene/OrthographicFrustum',
-         'Scene/EllipsoidSurfaceAppearance',
-         'Scene/Material',
-         'Specs/render',
-         'Specs/pick',
-         'Specs/createContext',
-         'Specs/destroyContext',
-         'Specs/createFrameState'
-     ], 'Scene/GeometryRendering', function(
-         BoxGeometry,
-         CircleGeometry,
-         CylinderGeometry,
-         defined,
-         EllipseGeometry,
-         EllipsoidGeometry,
-         SphereGeometry,
-         RectangleGeometry,
-         PolygonGeometry,
-         SimplePolylineGeometry,
-         PolylineGeometry,
-         WallGeometry,
-         CorridorGeometry,
-         CornerType,
-         defaultValue,
-         Geometry,
-         GeometryAttribute,
-         GeometryInstance,
-         ColorGeometryInstanceAttribute,
-         GeometryInstanceAttribute,
-         ComponentDatatype,
-         Cartesian2,
-         Cartesian3,
-         Matrix4,
-         Rectangle,
-         Ellipsoid,
-         PrimitiveType,
-         PolylineVolumeGeometry,
-         Transforms,
-         Cartographic,
-         BoundingSphere,
-         CesiumMath,
-         Color,
-         ClearCommand,
-         PerInstanceColorAppearance,
-         PolylineColorAppearance,
-         Primitive,
-         SceneMode,
-         OrthographicFrustum,
-         EllipsoidSurfaceAppearance,
-         Material,
-         render,
-         pick,
-         createContext,
-         destroyContext,
-         createFrameState) {
+        'Core/BoundingSphere',
+        'Core/BoxGeometry',
+        'Core/Cartesian2',
+        'Core/Cartesian3',
+        'Core/CircleGeometry',
+        'Core/Color',
+        'Core/ColorGeometryInstanceAttribute',
+        'Core/ComponentDatatype',
+        'Core/CornerType',
+        'Core/CorridorGeometry',
+        'Core/CylinderGeometry',
+        'Core/defined',
+        'Core/EllipseGeometry',
+        'Core/Ellipsoid',
+        'Core/EllipsoidGeometry',
+        'Core/Geometry',
+        'Core/GeometryAttribute',
+        'Core/GeometryInstance',
+        'Core/Math',
+        'Core/Matrix4',
+        'Core/PolygonGeometry',
+        'Core/PolylineGeometry',
+        'Core/PolylineVolumeGeometry',
+        'Core/PrimitiveType',
+        'Core/Rectangle',
+        'Core/RectangleGeometry',
+        'Core/SimplePolylineGeometry',
+        'Core/SphereGeometry',
+        'Core/Transforms',
+        'Core/WallGeometry',
+        'Renderer/ClearCommand',
+        'Scene/EllipsoidSurfaceAppearance',
+        'Scene/Material',
+        'Scene/OrthographicFrustum',
+        'Scene/PerInstanceColorAppearance',
+        'Scene/PolylineColorAppearance',
+        'Scene/Primitive',
+        'Scene/SceneMode',
+        'Specs/createContext',
+        'Specs/createFrameState',
+        'Specs/destroyContext',
+        'Specs/pick',
+        'Specs/render'
+    ], 'Scene/GeometryRendering', function(
+        BoundingSphere,
+        BoxGeometry,
+        Cartesian2,
+        Cartesian3,
+        CircleGeometry,
+        Color,
+        ColorGeometryInstanceAttribute,
+        ComponentDatatype,
+        CornerType,
+        CorridorGeometry,
+        CylinderGeometry,
+        defined,
+        EllipseGeometry,
+        Ellipsoid,
+        EllipsoidGeometry,
+        Geometry,
+        GeometryAttribute,
+        GeometryInstance,
+        CesiumMath,
+        Matrix4,
+        PolygonGeometry,
+        PolylineGeometry,
+        PolylineVolumeGeometry,
+        PrimitiveType,
+        Rectangle,
+        RectangleGeometry,
+        SimplePolylineGeometry,
+        SphereGeometry,
+        Transforms,
+        WallGeometry,
+        ClearCommand,
+        EllipsoidSurfaceAppearance,
+        Material,
+        OrthographicFrustum,
+        PerInstanceColorAppearance,
+        PolylineColorAppearance,
+        Primitive,
+        SceneMode,
+        createContext,
+        createFrameState,
+        destroyContext,
+        pick,
+        render) {
     "use strict";
     /*global jasmine,describe,xdescribe,it,xit,expect,beforeEach,afterEach,beforeAll,afterAll,spyOn,runs,waits,waitsFor*/
 
@@ -190,12 +184,8 @@ defineSuite([
         primitive.update(context, frameState, []);
 
         frameState.mode = SceneMode.COLUMBUS_VIEW;
-        frameState.morphTime = frameState.mode.morphTime;
-        frameState.camera.transform = new Matrix4(0.0, 0.0, 1.0, 0.0,
-                                                  1.0, 0.0, 0.0, 0.0,
-                                                  0.0, 1.0, 0.0, 0.0,
-                                                  0.0, 0.0, 0.0, 1.0);
-        frameState.camera.update(frameState.mode, frameState.scene2D);
+        frameState.morphTime = SceneMode.getMorphTime(frameState.mode);
+        frameState.camera.update(frameState.mode);
 
         viewSphereCV(frameState.camera, primitive._boundingSphere, primitive.modelMatrix);
 
@@ -253,18 +243,15 @@ defineSuite([
         primitive.update(context, frameState, []);
 
         frameState.mode = SceneMode.SCENE2D;
-        frameState.morphTime = frameState.mode.morphTime;
-        frameState.camera.transform = new Matrix4(0.0, 0.0, 1.0, 0.0,
-                                                  1.0, 0.0, 0.0, 0.0,
-                                                  0.0, 1.0, 0.0, 0.0,
-                                                  0.0, 0.0, 0.0, 1.0);
+        frameState.morphTime = SceneMode.getMorphTime(frameState.mode);
+
         var frustum = new OrthographicFrustum();
         frustum.right = ellipsoid.maximumRadius * Math.PI;
         frustum.left = -frustum.right;
         frustum.top = frustum.right;
         frustum.bottom = -frustum.top;
         frameState.camera.frustum = frustum;
-        frameState.camera.update(frameState.mode, frameState.scene2D);
+        frameState.camera.update(frameState.mode);
 
         viewSphere2D(frameState.camera, primitive._boundingSphere, primitive.modelMatrix);
         context.uniformState.update(context, frameState);
@@ -355,7 +342,7 @@ defineSuite([
                     dimensions : new Cartesian3(1000000.0, 1000000.0, 2000000.0)
                 }),
                 modelMatrix : Matrix4.multiplyByTranslation(Transforms.eastNorthUpToFixedFrame(
-                    ellipsoid.cartographicToCartesian(Cartographic.fromDegrees(-75.59777, 40.03883))), new Cartesian3(0.0, 0.0, 3000000.0)),
+                    Cartesian3.fromDegrees(-75.59777, 40.03883)), new Cartesian3(0.0, 0.0, 3000000.0), new Matrix4()),
                 id : 'box',
                 attributes : {
                     color : new ColorGeometryInstanceAttribute(1.0, 1.0, 0.0, 1.0)
@@ -391,7 +378,7 @@ defineSuite([
                 geometry : new CircleGeometry({
                     vertexFormat : PerInstanceColorAppearance.FLAT_VERTEX_FORMAT,
                     ellipsoid : ellipsoid,
-                    center : ellipsoid.cartographicToCartesian(Cartographic.fromDegrees(-100, 20)),
+                    center : Cartesian3.fromDegrees(-100, 20),
                     radius : 1000000.0
                 }),
                 id : 'circle',
@@ -434,7 +421,7 @@ defineSuite([
                 }),
                 id: 'cylinder',
                 modelMatrix : Matrix4.multiplyByUniformScale(Matrix4.multiplyByTranslation(Transforms.eastNorthUpToFixedFrame(
-                        ellipsoid.cartographicToCartesian(Cartographic.fromDegrees(-90.0, 45.0))), new Cartesian3(0.0, 0.0, 500000.0)), 90000.0),
+                        Cartesian3.fromDegrees(-90.0, 45.0)), new Cartesian3(0.0, 0.0, 500000.0), new Matrix4()), 90000.0, new Matrix4()),
                 attributes : {
                     color : new ColorGeometryInstanceAttribute(Math.random(), Math.random(), Math.random(), 0.5)
                 }
@@ -469,7 +456,7 @@ defineSuite([
                 geometry : new EllipseGeometry({
                     vertexFormat : PerInstanceColorAppearance.FLAT_VERTEX_FORMAT,
                     ellipsoid : ellipsoid,
-                    center : ellipsoid.cartographicToCartesian(Cartographic.fromDegrees(-100, 20)),
+                    center : Cartesian3.fromDegrees(-100, 20),
                     semiMinorAxis : 1000000.0,
                     semiMajorAxis : 1000000.0
                 }),
@@ -505,7 +492,7 @@ defineSuite([
                 geometry : new EllipseGeometry({
                     vertexFormat : PerInstanceColorAppearance.FLAT_VERTEX_FORMAT,
                     ellipsoid : ellipsoid,
-                    center : ellipsoid.cartographicToCartesian(Cartographic.fromDegrees(-100, 20)),
+                    center : Cartesian3.fromDegrees(-100, 20),
                     semiMinorAxis : 1000000.0,
                     semiMajorAxis : 1000000.0,
                     rotation : CesiumMath.PI_OVER_FOUR
@@ -523,7 +510,7 @@ defineSuite([
                 geometry : new EllipseGeometry({
                     vertexFormat : PerInstanceColorAppearance.FLAT_VERTEX_FORMAT,
                     ellipsoid : ellipsoid,
-                    center : ellipsoid.cartographicToCartesian(Cartographic.fromDegrees(-100, 20)),
+                    center : Cartesian3.fromDegrees(-100, 20),
                     semiMinorAxis : 1000000.0,
                     semiMajorAxis : 1000000.0,
                     height : 1000000.0
@@ -548,7 +535,7 @@ defineSuite([
                 geometry : new EllipseGeometry({
                     vertexFormat : PerInstanceColorAppearance.FLAT_VERTEX_FORMAT,
                     ellipsoid : ellipsoid,
-                    center : ellipsoid.cartographicToCartesian(Cartographic.fromDegrees(-100, 20)),
+                    center : Cartesian3.fromDegrees(-100, 20),
                     semiMinorAxis : 1000000.0,
                     semiMajorAxis : 1000000.0,
                     height : geometryHeight,
@@ -586,8 +573,9 @@ defineSuite([
                 var height = (extrudedHeight - geometryHeight) * 0.5;
                 var transform = Matrix4.multiplyByTranslation(
                         Transforms.eastNorthUpToFixedFrame(primitive._boundingSphere.center),
-                        new Cartesian3(0.0, 0.0, height));
-                frameState.camera.rotateDown(CesiumMath.PI, transform);
+                        new Cartesian3(0.0, 0.0, height), new Matrix4());
+                frameState.camera.setTransform(transform);
+                frameState.camera.rotateDown(CesiumMath.PI);
             };
             render3D(instance, afterView);
         });
@@ -595,7 +583,8 @@ defineSuite([
         it('renders wall', function() {
             var afterView = function(frameState, primitive) {
                 var transform = Transforms.eastNorthUpToFixedFrame(primitive._boundingSphere.center);
-                frameState.camera.rotateDown(CesiumMath.PI_OVER_TWO, transform);
+                frameState.camera.setTransform(transform);
+                frameState.camera.rotateDown(CesiumMath.PI_OVER_TWO);
             };
             render3D(instance, afterView);
         });
@@ -610,7 +599,7 @@ defineSuite([
                     radii : new Cartesian3(1000000.0, 1000000.0, 500000.0)
                 }),
                 modelMatrix : Matrix4.multiplyByTranslation(Transforms.eastNorthUpToFixedFrame(
-                    ellipsoid.cartographicToCartesian(Cartographic.fromDegrees(-100, 20))), new Cartesian3(0.0, 0.0, 1000000.0)),
+                    Cartesian3.fromDegrees(-100, 20)), new Cartesian3(0.0, 0.0, 1000000.0), new Matrix4()),
                 id : 'ellipsoid',
                 attributes : {
                     color : new ColorGeometryInstanceAttribute(1.0, 1.0, 0.0, 1.0)
@@ -648,7 +637,7 @@ defineSuite([
                     radius : 1000000.0
                 }),
                 modelMatrix : Matrix4.multiplyByTranslation(Transforms.eastNorthUpToFixedFrame(
-                    ellipsoid.cartographicToCartesian(Cartographic.fromDegrees(-100, 20))), new Cartesian3(0.0, 0.0, 1000000.0)),
+                    Cartesian3.fromDegrees(-100, 20)), new Cartesian3(0.0, 0.0, 1000000.0), new Matrix4()),
                 id : 'sphere',
                 attributes : {
                     color : new ColorGeometryInstanceAttribute(1.0, 1.0, 0.0, 1.0)
@@ -808,7 +797,8 @@ defineSuite([
         it('renders bottom', function() {
             var afterView = function(frameState, primitive) {
                 var transform = Transforms.eastNorthUpToFixedFrame(primitive._boundingSphere.center);
-                frameState.camera.rotateDown(CesiumMath.PI, transform);
+                frameState.camera.setTransform(transform);
+                frameState.camera.rotateDown(CesiumMath.PI);
             };
             render3D(instance, afterView);
         });
@@ -816,7 +806,8 @@ defineSuite([
         it('renders north wall', function() {
             var afterView = function(frameState, primitive) {
                 var transform = Transforms.eastNorthUpToFixedFrame(primitive._boundingSphere.center);
-                frameState.camera.rotateDown(-CesiumMath.PI_OVER_TWO, transform);
+                frameState.camera.setTransform(transform);
+                frameState.camera.rotateDown(-CesiumMath.PI_OVER_TWO);
             };
             render3D(instance, afterView);
         });
@@ -824,7 +815,8 @@ defineSuite([
         it('renders south wall', function() {
             var afterView = function(frameState, primitive) {
                 var transform = Transforms.eastNorthUpToFixedFrame(primitive._boundingSphere.center);
-                frameState.camera.rotateDown(CesiumMath.PI_OVER_TWO, transform);
+                frameState.camera.setTransform(transform);
+                frameState.camera.rotateDown(CesiumMath.PI_OVER_TWO);
             };
             render3D(instance, afterView);
         });
@@ -832,7 +824,8 @@ defineSuite([
         it('renders west wall', function() {
             var afterView = function(frameState, primitive) {
                 var transform = Transforms.eastNorthUpToFixedFrame(primitive._boundingSphere.center);
-                frameState.camera.rotateRight(-CesiumMath.PI_OVER_TWO, transform);
+                frameState.camera.setTransform(transform);
+                frameState.camera.rotateRight(-CesiumMath.PI_OVER_TWO);
             };
             render3D(instance, afterView);
         });
@@ -840,7 +833,8 @@ defineSuite([
         it('renders east wall', function() {
             var afterView = function(frameState, primitive) {
                 var transform = Transforms.eastNorthUpToFixedFrame(primitive._boundingSphere.center);
-                frameState.camera.rotateRight(CesiumMath.PI_OVER_TWO, transform);
+                frameState.camera.setTransform(transform);
+                frameState.camera.rotateRight(CesiumMath.PI_OVER_TWO);
             };
             render3D(instance, afterView);
         });
@@ -853,11 +847,11 @@ defineSuite([
                 geometry : PolygonGeometry.fromPositions({
                     vertexFormat : PerInstanceColorAppearance.FLAT_VERTEX_FORMAT,
                     ellipsoid : ellipsoid,
-                    positions : ellipsoid.cartographicArrayToCartesianArray([
-                        Cartographic.fromDegrees(0.0, 45.0),
-                        Cartographic.fromDegrees(10.0, 45.0),
-                        Cartographic.fromDegrees(10.0, 55.0),
-                        Cartographic.fromDegrees(0.0, 55.0)
+                    positions : Cartesian3.fromDegreesArray([
+                        0.0, 45.0,
+                        10.0, 45.0,
+                        10.0, 55.0,
+                        0.0, 55.0
                     ])
                 }),
                 id : 'polygon',
@@ -892,11 +886,11 @@ defineSuite([
                 geometry : PolygonGeometry.fromPositions({
                     vertexFormat : PerInstanceColorAppearance.FLAT_VERTEX_FORMAT,
                     ellipsoid : ellipsoid,
-                    positions : ellipsoid.cartographicArrayToCartesianArray([
-                        Cartographic.fromDegrees(0.0, 45.0),
-                        Cartographic.fromDegrees(10.0, 45.0),
-                        Cartographic.fromDegrees(10.0, 55.0),
-                        Cartographic.fromDegrees(0.0, 55.0)
+                    positions : Cartesian3.fromDegreesArray([
+                        0.0, 45.0,
+                        10.0, 45.0,
+                        10.0, 55.0,
+                        0.0, 55.0
                     ]),
                     height : 3000000.0
                 }),
@@ -913,25 +907,25 @@ defineSuite([
                 geometry : new PolygonGeometry({
                     vertexFormat : PerInstanceColorAppearance.FLAT_VERTEX_FORMAT,
                     polygonHierarchy : {
-                        positions : ellipsoid.cartographicArrayToCartesianArray([
-                            Cartographic.fromDegrees(-109.0, 30.0),
-                            Cartographic.fromDegrees(-95.0, 30.0),
-                            Cartographic.fromDegrees(-95.0, 40.0),
-                            Cartographic.fromDegrees(-109.0, 40.0)
+                        positions : Cartesian3.fromDegreesArray([
+                            -109.0, 30.0,
+                            -95.0, 30.0,
+                            -95.0, 40.0,
+                            -109.0, 40.0
                         ]),
                         holes : [{
-                            positions : ellipsoid.cartographicArrayToCartesianArray([
-                                Cartographic.fromDegrees(-107.0, 31.0),
-                                Cartographic.fromDegrees(-107.0, 39.0),
-                                Cartographic.fromDegrees(-97.0, 39.0),
-                                Cartographic.fromDegrees(-97.0, 31.0)
+                            positions : Cartesian3.fromDegreesArray([
+                                -107.0, 31.0,
+                                -107.0, 39.0,
+                                -97.0, 39.0,
+                                -97.0, 31.0
                             ]),
                             holes : [{
-                                positions : ellipsoid.cartographicArrayToCartesianArray([
-                                    Cartographic.fromDegrees(-106.5, 31.5),
-                                    Cartographic.fromDegrees(-97.5, 31.5),
-                                    Cartographic.fromDegrees(-97.5, 38.5),
-                                    Cartographic.fromDegrees(-106.5, 38.5)
+                                positions : Cartesian3.fromDegreesArray([
+                                    -106.5, 31.5,
+                                    -97.5, 31.5,
+                                    -97.5, 38.5,
+                                    -106.5, 38.5
                                 ])
                             }]
                         }]
@@ -960,11 +954,11 @@ defineSuite([
                 geometry : PolygonGeometry.fromPositions({
                     vertexFormat : PerInstanceColorAppearance.FLAT_VERTEX_FORMAT,
                     ellipsoid : ellipsoid,
-                    positions : ellipsoid.cartographicArrayToCartesianArray([
-                        Cartographic.fromDegrees(-1.0, -1.0),
-                        Cartographic.fromDegrees(1.0, -1.0),
-                        Cartographic.fromDegrees(1.0, 1.0),
-                        Cartographic.fromDegrees(-1.0, 1.0)
+                    positions : Cartesian3.fromDegreesArray([
+                        -1.0, -1.0,
+                        1.0, -1.0,
+                        1.0, 1.0,
+                        -1.0, 1.0
                     ]),
                     height: geometryHeight,
                     extrudedHeight: extrudedHeight
@@ -1001,8 +995,9 @@ defineSuite([
                 var height = (extrudedHeight - geometryHeight) * 0.5;
                 var transform = Matrix4.multiplyByTranslation(
                         Transforms.eastNorthUpToFixedFrame(primitive._boundingSphere.center),
-                        new Cartesian3(0.0, 0.0, height));
-                frameState.camera.rotateDown(CesiumMath.PI, transform);
+                        new Cartesian3(0.0, 0.0, height), new Matrix4());
+                frameState.camera.setTransform(transform);
+                frameState.camera.rotateDown(CesiumMath.PI);
             };
             render3D(instance, afterView);
         });
@@ -1010,7 +1005,8 @@ defineSuite([
         it('renders wall 1', function() {
             var afterView = function(frameState, primitive) {
                 var transform = Transforms.eastNorthUpToFixedFrame(primitive._boundingSphere.center);
-                frameState.camera.rotateUp(CesiumMath.PI_OVER_TWO, transform);
+                frameState.camera.setTransform(transform);
+                frameState.camera.rotateUp(CesiumMath.PI_OVER_TWO);
             };
             render3D(instance, afterView);
         });
@@ -1018,7 +1014,8 @@ defineSuite([
         it('renders wall 2', function() {
             var afterView = function(frameState, primitive) {
                 var transform = Transforms.eastNorthUpToFixedFrame(primitive._boundingSphere.center);
-                frameState.camera.rotateDown(-CesiumMath.PI_OVER_TWO, transform);
+                frameState.camera.setTransform(transform);
+                frameState.camera.rotateDown(-CesiumMath.PI_OVER_TWO);
             };
             render3D(instance, afterView);
         });
@@ -1026,7 +1023,8 @@ defineSuite([
         it('renders wall 3', function() {
             var afterView = function(frameState, primitive) {
                 var transform = Transforms.eastNorthUpToFixedFrame(primitive._boundingSphere.center);
-                frameState.camera.rotateRight(-CesiumMath.PI_OVER_TWO, transform);
+                frameState.camera.setTransform(transform);
+                frameState.camera.rotateRight(-CesiumMath.PI_OVER_TWO);
             };
             render3D(instance, afterView);
         });
@@ -1034,7 +1032,8 @@ defineSuite([
         it('renders wall 4', function() {
             var afterView = function(frameState, primitive) {
                 var transform = Transforms.eastNorthUpToFixedFrame(primitive._boundingSphere.center);
-                frameState.camera.rotateRight(CesiumMath.PI_OVER_TWO, transform);
+                frameState.camera.setTransform(transform);
+                frameState.camera.rotateRight(CesiumMath.PI_OVER_TWO);
             };
             render3D(instance, afterView);
         });
@@ -1045,11 +1044,11 @@ defineSuite([
                     geometry : PolygonGeometry.fromPositions({
                         vertexFormat : PerInstanceColorAppearance.VERTEX_FORMAT,
                         ellipsoid : ellipsoid,
-                        positions : ellipsoid.cartographicArrayToCartesianArray([
-                            Cartographic.fromDegrees(-108.0, -25.0, 500000),
-                            Cartographic.fromDegrees(-100.0, -25.0, 500000),
-                            Cartographic.fromDegrees(-100.0, -30.0, 500000),
-                            Cartographic.fromDegrees(-108.0, -30.0, 500000)
+                        positions : Cartesian3.fromDegreesArrayHeights([
+                            -108.0, -25.0, 500000,
+                            -100.0, -25.0, 500000,
+                            -100.0, -30.0, 500000,
+                            -108.0, -30.0, 500000
                         ]),
                         perPositionHeight : true,
                         extrudedHeight: 0
@@ -1071,7 +1070,8 @@ defineSuite([
             viewSphere3D(frameState.camera, primitive._boundingSphere, primitive.modelMatrix);
 
             var transform = Transforms.eastNorthUpToFixedFrame(primitive._boundingSphere.center);
-            frameState.camera.rotateDown(-CesiumMath.PI_OVER_TWO, transform);
+            frameState.camera.setTransform(transform);
+            frameState.camera.rotateDown(-CesiumMath.PI_OVER_TWO);
             frameState.camera.moveForward(primitive._boundingSphere.radius * 0.75);
 
             context.uniformState.update(context, frameState);
@@ -1098,9 +1098,9 @@ defineSuite([
                 geometry : new WallGeometry({
                     vertexFormat : PerInstanceColorAppearance.FLAT_VERTEX_FORMAT,
                     ellipsoid : ellipsoid,
-                    positions : ellipsoid.cartographicArrayToCartesianArray([
-                        Cartographic.fromDegrees(0.0, 0.0, height),
-                        Cartographic.fromDegrees(0.01, 0.0, height)
+                    positions : Cartesian3.fromDegreesArrayHeights([
+                        0.0, 0.0, height,
+                        0.01, 0.0, height
                     ])
                 }),
                 id : 'wall',
@@ -1111,16 +1111,17 @@ defineSuite([
 
             afterView3D = function(frameState, primitive) {
                 var transform = Transforms.eastNorthUpToFixedFrame(primitive._boundingSphere.center);
-                frameState.camera.rotateDown(-CesiumMath.PI_OVER_TWO, transform);
+                frameState.camera.setTransform(transform);
+                frameState.camera.rotateDown(-CesiumMath.PI_OVER_TWO);
                 frameState.camera.zoomIn(primitive._boundingSphere.radius * 0.99);
             };
 
             afterViewCV = function(frameState, primitive) {
-                var translation = Cartesian3.clone(frameState.camera.position);
-                translation.z = 0.0;
-                var transform = Matrix4.fromTranslation(translation);
-                frameState.camera.rotateDown(-CesiumMath.PI_OVER_TWO, transform);
+                var transform = Transforms.eastNorthUpToFixedFrame(primitive._boundingSphere.center);
+                Matrix4.clone(transform, frameState.camera.transform);
+                frameState.camera.rotateDown(-CesiumMath.PI_OVER_TWO);
                 frameState.camera.zoomIn(primitive._boundingSphere.radius * 1.85);
+                Matrix4.clone(Matrix4.IDENTITY, frameState.camera.transform);
             };
         });
 
@@ -1148,9 +1149,9 @@ defineSuite([
         var positions;
         var width;
         beforeAll(function() {
-            positions = ellipsoid.cartographicArrayToCartesianArray([
-                Cartographic.fromDegrees(0.0, -1.0),
-                Cartographic.fromDegrees(0.0, 1.0)
+            positions = Cartesian3.fromDegreesArray([
+                0.0, -1.0,
+                0.0, 1.0
             ]);
             width = 100000;
             instance = new GeometryInstance({
@@ -1213,9 +1214,9 @@ defineSuite([
         var width = 100000;
         var positions;
         beforeAll(function() {
-            positions = ellipsoid.cartographicArrayToCartesianArray([
-                 Cartographic.fromDegrees(0.0, -1.0),
-                 Cartographic.fromDegrees(0.0, 1.0)
+            positions = Cartesian3.fromDegreesArray([
+                 0.0, -1.0,
+                 0.0, 1.0
              ]);
             extrudedHeight = 200000.0;
             geometryHeight = 100000.0;
@@ -1261,8 +1262,9 @@ defineSuite([
                 var height = (extrudedHeight - geometryHeight) * 0.5;
                 var transform = Matrix4.multiplyByTranslation(
                         Transforms.eastNorthUpToFixedFrame(primitive._boundingSphere.center),
-                        new Cartesian3(0.0, 0.0, height));
-                frameState.camera.rotateDown(CesiumMath.PI, transform);
+                        new Cartesian3(0.0, 0.0, height), new Matrix4());
+                frameState.camera.setTransform(transform);
+                frameState.camera.rotateDown(CesiumMath.PI);
             };
             render3D(instance, afterView);
         });
@@ -1270,7 +1272,8 @@ defineSuite([
         it('renders north wall', function() {
             var afterView = function(frameState, primitive) {
                 var transform = Transforms.eastNorthUpToFixedFrame(primitive._boundingSphere.center);
-                frameState.camera.rotateDown(-CesiumMath.PI_OVER_TWO, transform);
+                frameState.camera.setTransform(transform);
+                frameState.camera.rotateDown(-CesiumMath.PI_OVER_TWO);
             };
             render3D(instance, afterView);
         });
@@ -1278,7 +1281,8 @@ defineSuite([
         it('renders south wall', function() {
             var afterView = function(frameState, primitive) {
                 var transform = Transforms.eastNorthUpToFixedFrame(primitive._boundingSphere.center);
-                frameState.camera.rotateDown(CesiumMath.PI_OVER_TWO, transform);
+                frameState.camera.setTransform(transform);
+                frameState.camera.rotateDown(CesiumMath.PI_OVER_TWO);
             };
             render3D(instance, afterView);
         });
@@ -1286,7 +1290,8 @@ defineSuite([
         it('renders west wall', function() {
             var afterView = function(frameState, primitive) {
                 var transform = Transforms.eastNorthUpToFixedFrame(primitive._boundingSphere.center);
-                frameState.camera.rotateRight(-CesiumMath.PI_OVER_TWO, transform);
+                frameState.camera.setTransform(transform);
+                frameState.camera.rotateRight(-CesiumMath.PI_OVER_TWO);
             };
             render3D(instance, afterView);
         });
@@ -1294,7 +1299,8 @@ defineSuite([
         it('renders east wall', function() {
             var afterView = function(frameState, primitive) {
                 var transform = Transforms.eastNorthUpToFixedFrame(primitive._boundingSphere.center);
-                frameState.camera.rotateRight(CesiumMath.PI_OVER_TWO, transform);
+                frameState.camera.setTransform(transform);
+                frameState.camera.rotateRight(CesiumMath.PI_OVER_TWO);
             };
             render3D(instance, afterView);
         });
@@ -1306,9 +1312,9 @@ defineSuite([
         var positions;
         var shape;
         beforeAll(function() {
-            positions = ellipsoid.cartographicArrayToCartesianArray([
-                 Cartographic.fromDegrees(0.0, -1.0),
-                 Cartographic.fromDegrees(0.0, 1.0)
+            positions = Cartesian3.fromDegreesArray([
+                 0.0, -1.0,
+                 0.0, 1.0
              ]);
             shape = [new Cartesian2(-100000, -100000), new Cartesian2(100000, -100000), new Cartesian2(100000, 100000), new Cartesian2(-100000, 100000)];
             geometryHeight = 150000.0;
@@ -1353,8 +1359,9 @@ defineSuite([
                 var height = geometryHeight * 0.5;
                 var transform = Matrix4.multiplyByTranslation(
                         Transforms.eastNorthUpToFixedFrame(primitive._boundingSphere.center),
-                        new Cartesian3(0.0, 0.0, height));
-                frameState.camera.rotateDown(CesiumMath.PI, transform);
+                        new Cartesian3(0.0, 0.0, height), new Matrix4());
+                frameState.camera.setTransform(transform);
+                frameState.camera.rotateDown(CesiumMath.PI);
             };
             render3D(instance, afterView);
         });
@@ -1362,7 +1369,8 @@ defineSuite([
         it('renders north wall', function() {
             var afterView = function(frameState, primitive) {
                 var transform = Transforms.eastNorthUpToFixedFrame(primitive._boundingSphere.center);
-                frameState.camera.rotateDown(-CesiumMath.PI_OVER_TWO, transform);
+                frameState.camera.setTransform(transform);
+                frameState.camera.rotateDown(-CesiumMath.PI_OVER_TWO);
             };
             render3D(instance, afterView);
         });
@@ -1370,7 +1378,8 @@ defineSuite([
         it('renders south wall', function() {
             var afterView = function(frameState, primitive) {
                 var transform = Transforms.eastNorthUpToFixedFrame(primitive._boundingSphere.center);
-                frameState.camera.rotateDown(CesiumMath.PI_OVER_TWO, transform);
+                frameState.camera.setTransform(transform);
+                frameState.camera.rotateDown(CesiumMath.PI_OVER_TWO);
             };
             render3D(instance, afterView);
         });
@@ -1378,7 +1387,8 @@ defineSuite([
         it('renders west wall', function() {
             var afterView = function(frameState, primitive) {
                 var transform = Transforms.eastNorthUpToFixedFrame(primitive._boundingSphere.center);
-                frameState.camera.rotateRight(-CesiumMath.PI_OVER_TWO, transform);
+                frameState.camera.setTransform(transform);
+                frameState.camera.rotateRight(-CesiumMath.PI_OVER_TWO);
             };
             render3D(instance, afterView);
         });
@@ -1386,7 +1396,8 @@ defineSuite([
         it('renders east wall', function() {
             var afterView = function(frameState, primitive) {
                 var transform = Transforms.eastNorthUpToFixedFrame(primitive._boundingSphere.center);
-                frameState.camera.rotateRight(CesiumMath.PI_OVER_TWO, transform);
+                frameState.camera.setTransform(transform);
+                frameState.camera.rotateRight(CesiumMath.PI_OVER_TWO);
             };
             render3D(instance, afterView);
         });
@@ -1398,9 +1409,9 @@ defineSuite([
         beforeAll(function() {
             instance = new GeometryInstance({
                 geometry : new SimplePolylineGeometry({
-                    positions : ellipsoid.cartographicArrayToCartesianArray([
-                        Cartographic.fromDegrees(0.0, 0.0),
-                        Cartographic.fromDegrees(5.0, 0.0)
+                    positions : Cartesian3.fromDegreesArray([
+                        0.0, 0.0,
+                        5.0, 0.0
                     ])
                 }),
                 attributes : {
@@ -1433,9 +1444,9 @@ defineSuite([
         it('per segment colors', function() {
             instance = new GeometryInstance({
                 geometry : new SimplePolylineGeometry({
-                    positions : ellipsoid.cartographicArrayToCartesianArray([
-                        Cartographic.fromDegrees(0.0, 0.0),
-                        Cartographic.fromDegrees(5.0, 0.0)
+                    positions : Cartesian3.fromDegreesArray([
+                        0.0, 0.0,
+                        5.0, 0.0
                     ]),
                     colors : [new Color(1.0, 0.0, 0.0, 1.0), new Color(0.0, 1.0, 0.0, 1.0)]
                 }),
@@ -1447,9 +1458,9 @@ defineSuite([
         it('per vertex colors', function() {
             instance = new GeometryInstance({
                 geometry : new SimplePolylineGeometry({
-                    positions : ellipsoid.cartographicArrayToCartesianArray([
-                        Cartographic.fromDegrees(0.0, 0.0),
-                        Cartographic.fromDegrees(5.0, 0.0)
+                    positions : Cartesian3.fromDegreesArray([
+                        0.0, 0.0,
+                        5.0, 0.0
                     ]),
                     colors : [new Color(1.0, 0.0, 0.0, 1.0), new Color(0.0, 1.0, 0.0, 1.0)],
                     colorsPerVertex : true
@@ -1467,9 +1478,9 @@ defineSuite([
         beforeAll(function() {
             instance = new GeometryInstance({
                 geometry : new PolylineGeometry({
-                    positions : ellipsoid.cartographicArrayToCartesianArray([
-                        Cartographic.fromDegrees(0.0, 0.0),
-                        Cartographic.fromDegrees(5.0, 0.0)
+                    positions : Cartesian3.fromDegreesArray([
+                        0.0, 0.0,
+                        5.0, 0.0
                     ]),
                     width : 20.0
                 }),
@@ -1507,12 +1518,13 @@ defineSuite([
         it('per segment colors', function() {
             instance = new GeometryInstance({
                 geometry : new PolylineGeometry({
-                    positions : ellipsoid.cartographicArrayToCartesianArray([
-                        Cartographic.fromDegrees(0.0, 0.0),
-                        Cartographic.fromDegrees(5.0, 0.0)
+                    positions : Cartesian3.fromDegreesArray([
+                        0.0, 0.0,
+                        5.0, 0.0
                     ]),
                     width : 20.0,
-                    colors : [new Color(1.0, 0.0, 0.0, 1.0), new Color(0.0, 1.0, 0.0, 1.0)]
+                    colors : [new Color(1.0, 0.0, 0.0, 1.0), new Color(0.0, 1.0, 0.0, 1.0)],
+                    followSurface: false
                 }),
                 id : 'polyline'
             });
@@ -1522,13 +1534,14 @@ defineSuite([
         it('per vertex colors', function() {
             instance = new GeometryInstance({
                 geometry : new PolylineGeometry({
-                    positions : ellipsoid.cartographicArrayToCartesianArray([
-                        Cartographic.fromDegrees(0.0, 0.0),
-                        Cartographic.fromDegrees(5.0, 0.0)
+                    positions : Cartesian3.fromDegreesArray([
+                        0.0, 0.0,
+                        5.0, 0.0
                     ]),
                     width : 20.0,
                     colors : [new Color(1.0, 0.0, 0.0, 1.0), new Color(0.0, 1.0, 0.0, 1.0)],
-                    colorsPerVertex : true
+                    colorsPerVertex : true,
+                    followSurface: false
                 }),
                 id : 'polyline'
             });

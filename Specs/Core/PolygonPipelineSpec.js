@@ -1,22 +1,16 @@
 /*global defineSuite*/
 defineSuite([
-         'Core/PolygonPipeline',
-         'Core/Cartesian2',
-         'Core/Cartesian3',
-         'Core/Cartographic',
-         'Core/Ellipsoid',
-         'Core/WindingOrder',
-         'Core/Math',
-         'Core/Shapes'
-     ], function(
-         PolygonPipeline,
-         Cartesian2,
-         Cartesian3,
-         Cartographic,
-         Ellipsoid,
-         WindingOrder,
-         CesiumMath,
-         Shapes) {
+        'Core/PolygonPipeline',
+        'Core/Cartesian2',
+        'Core/Cartesian3',
+        'Core/Ellipsoid',
+        'Core/WindingOrder'
+    ], function(
+        PolygonPipeline,
+        Cartesian2,
+        Cartesian3,
+        Ellipsoid,
+        WindingOrder) {
     "use strict";
     /*global jasmine,describe,xdescribe,it,xit,expect,beforeEach,afterEach,beforeAll,afterAll,spyOn,runs,waits,waitsFor*/
 
@@ -378,23 +372,24 @@ defineSuite([
     });
 
     it('eliminateHoles works with non-WGS84 ellipsoids', function() {
-        var outerRing = Ellipsoid.UNIT_SPHERE.cartographicArrayToCartesianArray([
-            new Cartographic.fromDegrees(-122.0, 37.0, 0.0),
-            new Cartographic.fromDegrees(-121.9, 37.0, 0.0),
-            new Cartographic.fromDegrees(-121.9, 37.1, 0.0),
-            new Cartographic.fromDegrees(-122.0, 37.1, 0.0),
-            new Cartographic.fromDegrees(-122.0, 37.0, 0.0)
-        ]);
+        var ellipsoid = Ellipsoid.UNIT_SPHERE;
+        var outerRing = Cartesian3.fromDegreesArray([
+            -122.0, 37.0,
+            -121.9, 37.0,
+            -121.9, 37.1,
+            -122.0, 37.1,
+            -122.0, 37.0
+        ], ellipsoid);
 
-        var innerRing = Ellipsoid.UNIT_SPHERE.cartographicArrayToCartesianArray([
-            new Cartographic.fromDegrees(-121.96, 37.04, 0.0),
-            new Cartographic.fromDegrees(-121.96, 37.01, 0.0),
-            new Cartographic.fromDegrees(-121.99, 37.01, 0.0),
-            new Cartographic.fromDegrees(-121.99, 37.04, 0.0)
-        ]);
+        var innerRing = Cartesian3.fromDegreesArray([
+            -121.96, 37.04,
+            -121.96, 37.01,
+            -121.99, 37.01,
+            -121.99, 37.04
+        ], ellipsoid);
 
         var innerRings = [innerRing];
-        var positions = PolygonPipeline.eliminateHoles(outerRing, innerRings, Ellipsoid.UNIT_SPHERE);
+        var positions = PolygonPipeline.eliminateHoles(outerRing, innerRings, ellipsoid);
 
         expect(positions[0]).toEqual(outerRing[0]);
         expect(positions[1]).toEqual(outerRing[1]);
@@ -412,19 +407,19 @@ defineSuite([
     });
 
     it('eliminateHoles removes a hole from a polygon', function() {
-        var outerRing = Ellipsoid.WGS84.cartographicArrayToCartesianArray([
-            new Cartographic.fromDegrees(-122.0, 37.0, 0.0),
-            new Cartographic.fromDegrees(-121.9, 37.0, 0.0),
-            new Cartographic.fromDegrees(-121.9, 37.1, 0.0),
-            new Cartographic.fromDegrees(-122.0, 37.1, 0.0),
-            new Cartographic.fromDegrees(-122.0, 37.0, 0.0)
+        var outerRing = Cartesian3.fromDegreesArray([
+            -122.0, 37.0,
+            -121.9, 37.0,
+            -121.9, 37.1,
+            -122.0, 37.1,
+            -122.0, 37.0
         ]);
 
-        var innerRing = Ellipsoid.WGS84.cartographicArrayToCartesianArray([
-            new Cartographic.fromDegrees(-121.96, 37.04, 0.0),
-            new Cartographic.fromDegrees(-121.96, 37.01, 0.0),
-            new Cartographic.fromDegrees(-121.99, 37.01, 0.0),
-            new Cartographic.fromDegrees(-121.99, 37.04, 0.0)
+        var innerRing = Cartesian3.fromDegreesArray([
+            -121.96, 37.04,
+            -121.96, 37.01,
+            -121.99, 37.01,
+            -121.99, 37.04
         ]);
 
         var innerRings = [innerRing];
@@ -446,19 +441,19 @@ defineSuite([
     });
 
     it('eliminateHoles ensures proper winding order', function() {
-        var outerRing = Ellipsoid.WGS84.cartographicArrayToCartesianArray([
-            new Cartographic.fromDegrees(-122.0, 37.0, 0.0),
-            new Cartographic.fromDegrees(-121.9, 37.0, 0.0),
-            new Cartographic.fromDegrees(-121.9, 37.1, 0.0),
-            new Cartographic.fromDegrees(-122.0, 37.1, 0.0),
-            new Cartographic.fromDegrees(-122.0, 37.0, 0.0)
+        var outerRing = Cartesian3.fromDegreesArray([
+            -122.0, 37.0,
+            -121.9, 37.0,
+            -121.9, 37.1,
+            -122.0, 37.1,
+            -122.0, 37.0
         ]);
 
-        var innerRing = Ellipsoid.WGS84.cartographicArrayToCartesianArray([
-            new Cartographic.fromDegrees(-121.96, 37.04, 0.0),
-            new Cartographic.fromDegrees(-121.99, 37.04, 0.0),
-            new Cartographic.fromDegrees(-121.99, 37.01, 0.0),
-            new Cartographic.fromDegrees(-121.96, 37.01, 0.0)
+        var innerRing = Cartesian3.fromDegreesArray([
+            -121.96, 37.04,
+            -121.99, 37.04,
+            -121.99, 37.01,
+            -121.96, 37.01
         ]);
 
         var innerRings = [innerRing];
@@ -480,21 +475,21 @@ defineSuite([
     });
 
     it('eliminateHoles works with concave polygons', function() {
-        var outerRing = Ellipsoid.WGS84.cartographicArrayToCartesianArray([
-            new Cartographic.fromDegrees(-122.0, 37.0),
-            new Cartographic.fromDegrees(-121.96, 37.0),
-            new Cartographic.fromDegrees(-121.92, 37.03),
-            new Cartographic.fromDegrees(-121.92, 37.0),
-            new Cartographic.fromDegrees(-121.9, 37.0),
-            new Cartographic.fromDegrees(-121.9, 37.1),
-            new Cartographic.fromDegrees(-122.0, 37.1)
+        var outerRing = Cartesian3.fromDegreesArray([
+            -122.0, 37.0,
+            -121.96, 37.0,
+            -121.92, 37.03,
+            -121.92, 37.0,
+            -121.9, 37.0,
+            -121.9, 37.1,
+            -122.0, 37.1
         ]);
 
-        var innerRing = Ellipsoid.WGS84.cartographicArrayToCartesianArray([
-            new Cartographic.fromDegrees(-121.99, 37.01),
-            new Cartographic.fromDegrees(-121.99, 37.04),
-            new Cartographic.fromDegrees(-121.96, 37.04),
-            new Cartographic.fromDegrees(-121.96, 37.01)
+        var innerRing = Cartesian3.fromDegreesArray([
+            -121.99, 37.01,
+            -121.99, 37.04,
+            -121.96, 37.04,
+            -121.96, 37.01
         ]);
 
         var positions = PolygonPipeline.eliminateHoles(outerRing, [innerRing]);
@@ -517,36 +512,36 @@ defineSuite([
     });
 
     it('eliminateHoles eliminates multiple holes', function() {
-        var outerRing = Ellipsoid.WGS84.cartographicArrayToCartesianArray([
-            new Cartographic.fromDegrees(-122.0, 37.0),
-            new Cartographic.fromDegrees(-121.9, 37.0),
-            new Cartographic.fromDegrees(-121.9, 37.1),
-            new Cartographic.fromDegrees(-122.0, 37.1)
+        var outerRing = Cartesian3.fromDegreesArray([
+            -122.0, 37.0,
+            -121.9, 37.0,
+            -121.9, 37.1,
+            -122.0, 37.1
         ]);
 
-        var inner0 = Ellipsoid.WGS84.cartographicArrayToCartesianArray([
-            new Cartographic.fromDegrees(-121.99, 37.01),
-            new Cartographic.fromDegrees(-121.99, 37.04),
-            new Cartographic.fromDegrees(-121.96, 37.04),
-            new Cartographic.fromDegrees(-121.96, 37.01)
+        var inner0 = Cartesian3.fromDegreesArray([
+            -121.99, 37.01,
+            -121.99, 37.04,
+            -121.96, 37.04,
+            -121.96, 37.01
         ]);
-        var inner1 = Ellipsoid.WGS84.cartographicArrayToCartesianArray([
-            new Cartographic.fromDegrees(-121.94, 37.06),
-            new Cartographic.fromDegrees(-121.94, 37.09),
-            new Cartographic.fromDegrees(-121.91, 37.09),
-            new Cartographic.fromDegrees(-121.91, 37.06)
+        var inner1 = Cartesian3.fromDegreesArray([
+            -121.94, 37.06,
+            -121.94, 37.09,
+            -121.91, 37.09,
+            -121.91, 37.06
         ]);
-        var inner2 = Ellipsoid.WGS84.cartographicArrayToCartesianArray([
-            new Cartographic.fromDegrees(-121.99, 37.06),
-            new Cartographic.fromDegrees(-121.99, 37.09),
-            new Cartographic.fromDegrees(-121.96, 37.09),
-            new Cartographic.fromDegrees(-121.96, 37.06)
+        var inner2 = Cartesian3.fromDegreesArray([
+            -121.99, 37.06,
+            -121.99, 37.09,
+            -121.96, 37.09,
+            -121.96, 37.06
         ]);
-        var inner3 = Ellipsoid.WGS84.cartographicArrayToCartesianArray([
-            new Cartographic.fromDegrees(-121.94, 37.01),
-            new Cartographic.fromDegrees(-121.94, 37.04),
-            new Cartographic.fromDegrees(-121.91, 37.04),
-            new Cartographic.fromDegrees(-121.91, 37.01)
+        var inner3 = Cartesian3.fromDegreesArray([
+            -121.94, 37.01,
+            -121.94, 37.04,
+            -121.91, 37.04,
+            -121.91, 37.01
         ]);
 
         var innerRings = [inner0, inner1, inner2, inner3];
@@ -556,16 +551,4 @@ defineSuite([
         expect(positions.length).toEqual(28);
     });
 
-    it('elimitate holes does not add undefined to returned positions', function() {
-        var ellipsoid = Ellipsoid.WGS84;
-        var center = new Cartographic(0.2930215893394521, 0.818292397338644, 1880.6159971414636);
-        var radius = 10000;
-        var outer = Shapes.computeCircleBoundary(ellipsoid, ellipsoid.cartographicToCartesian(center), radius);
-        var inner = Shapes.computeCircleBoundary(ellipsoid, ellipsoid.cartographicToCartesian(center), radius * 0.8);
-
-        var positions = PolygonPipeline.eliminateHoles(outer, [inner], ellipsoid);
-        expect(function() {
-            PolygonPipeline.removeDuplicates(positions);
-        }).not.toThrow();
-    });
 });

@@ -16,8 +16,6 @@ attribute vec4 pickColor;
 attribute vec4 color;
 #endif
 
-const vec2 czm_highResolutionSnapScale = vec2(1.0, 1.0);    // TODO
-
 varying vec2 v_textureCoordinates;
 
 #ifdef RENDER_FOR_PICK
@@ -33,19 +31,16 @@ float getNearFarScalar(vec4 nearFarScalar, float cameraDistSq)
     float nearDistanceSq = nearFarScalar.x * nearFarScalar.x;
     float farDistanceSq = nearFarScalar.z * nearFarScalar.z;
 
-    // ensure that t will fall within the range of [0.0, 1.0]
-    cameraDistSq = clamp(cameraDistSq, nearDistanceSq, farDistanceSq);
-
     float t = (cameraDistSq - nearDistanceSq) / (farDistanceSq - nearDistanceSq);
 
-    t = pow(t, 0.15);
+    t = pow(clamp(t, 0.0, 1.0), 0.2);
 
     return mix(valueAtMin, valueAtMax, t);
 }
 
 void main() 
 {
-    // Modifying this shader may also require modifications to Billboard.computeScreenSpacePosition
+    // Modifying this shader may also require modifications to Billboard._computeScreenSpacePosition
     
     // unpack attributes
     vec3 eyeOffset = eyeOffsetAndScale.xyz;
@@ -106,7 +101,7 @@ void main()
 
     vec4 positionWC = czm_eyeToWindowCoordinates(positionEC);
     
-    vec2 halfSize = imageSize * scale * czm_highResolutionSnapScale;
+    vec2 halfSize = imageSize * scale * czm_resolutionScale;
     halfSize *= ((direction * 2.0) - 1.0);
     
     positionWC.xy += (origin * abs(halfSize));
@@ -136,7 +131,7 @@ void main()
     
     positionWC.xy += halfSize;
     positionWC.xy += translate;
-    positionWC.xy += (pixelOffset * czm_highResolutionSnapScale);
+    positionWC.xy += (pixelOffset * czm_resolutionScale);
 
     gl_Position = czm_viewportOrthographic * vec4(positionWC.xy, -positionWC.z, 1.0);
     v_textureCoordinates = textureCoordinates;

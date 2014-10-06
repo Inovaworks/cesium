@@ -3,16 +3,13 @@ define([
         '../../Core/defined',
         '../../Core/defineProperties',
         '../../Core/DeveloperError',
-        '../../Core/requestAnimationFrame',
         '../CesiumInspector/CesiumInspector'
     ], function(
         defined,
         defineProperties,
         DeveloperError,
-        requestAnimationFrame,
         CesiumInspector) {
     "use strict";
-    /*global console*/
 
     /**
      * A mixin which adds the CesiumInspector widget to the Viewer widget.
@@ -23,6 +20,8 @@ define([
      * @param {Viewer} viewer The viewer instance.
      *
      * @exception {DeveloperError} viewer is required.
+     *
+     * @demo {@link http://cesiumjs.org/Cesium/Apps/Sandcastle/index.html?src=Cesium%20Inspector.html|Cesium Sandcastle Cesium Inspector Demo}
      *
      * @example
      * var viewer = new Cesium.Viewer('cesiumContainer');
