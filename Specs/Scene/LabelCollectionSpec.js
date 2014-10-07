@@ -4,6 +4,7 @@ defineSuite([
         'Core/BoundingSphere',
         'Core/Cartesian2',
         'Core/Cartesian3',
+        'Core/Cartographic',
         'Core/Color',
         'Core/Math',
         'Core/NearFarScalar',
@@ -24,6 +25,7 @@ defineSuite([
         BoundingSphere,
         Cartesian2,
         Cartesian3,
+        Cartographic,
         Color,
         CesiumMath,
         NearFarScalar,
@@ -1562,11 +1564,11 @@ defineSuite([
         var ellipsoid = projection.ellipsoid;
 
         var one = labels.add({
-            position : Cartesian3.fromDegrees(-50.0, -50.0),
+            position : ellipsoid.cartographicToCartesian(Cartographic.fromDegrees(-50.0, -50.0, 0.0)),
             text : 'one'
         });
         var two = labels.add({
-            position : Cartesian3.fromDegrees(-50.0, 50.0),
+            position : ellipsoid.cartographicToCartesian(Cartographic.fromDegrees(-50.0, 50.0, 0.0)),
             text : 'two'
         });
 

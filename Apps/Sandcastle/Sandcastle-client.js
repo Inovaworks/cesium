@@ -110,26 +110,15 @@
 
     Sandcastle.declare = function(obj) {
         try {
-            //Browsers such as IE don't have a stack property until you actually throw the error.
-            var stack = '';
-            try {
-                throw new Error();
-            } catch (ex) {
-                stack = ex.stack.toString();
-            }
-            var needle = Sandcastle.bucket + ':';   // Firefox
-            var pos = stack.indexOf(needle);
+            var stack = new Error().stack.toString();
+            var pos = stack.indexOf(Sandcastle.bucket + ':');
+            var lineNumber;
             if (pos < 0) {
-                needle = ' (<anonymous>:';          // Chrome
-                pos = stack.indexOf(needle);
-            }
-            if (pos < 0) {
-                needle = ' (Unknown script code:';  // IE 11
-                pos = stack.indexOf(needle);
+                pos = stack.indexOf('<anonymous>');
             }
             if (pos >= 0) {
-                pos += needle.length;
-                var lineNumber = parseInt(stack.substring(pos), 10);
+                pos += 12;
+                lineNumber = parseInt(stack.substring(pos), 10);
                 Sandcastle.registered.push({
                     'obj' : obj,
                     'lineNumber' : lineNumber

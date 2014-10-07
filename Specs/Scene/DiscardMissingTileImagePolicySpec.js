@@ -43,23 +43,23 @@ defineSuite([
         it('requests the missing image url', function() {
             var missingImageUrl = 'http://some.host.invalid/missingImage.png';
 
-            spyOn(loadImage, 'createImage').andCallFake(function(url, crossOrigin, deferred) {
-                if (/^blob:/.test(url)) {
-                    // load blob url normally
-                    loadImage.defaultCreateImage(url, crossOrigin, deferred);
-                } else {
+            var imageDownloaded = false;
+            loadImage.createImage = function(url, crossOrigin, deferred) {
+                if (url.indexOf('blob:') !== 0) {
                     expect(url).toEqual(missingImageUrl);
-                    loadImage.defaultCreateImage('Data/Images/Red16x16.png', crossOrigin, deferred);
+                    imageDownloaded = true;
                 }
-            });
+                return loadImage.defaultCreateImage('Data/Images/Red16x16.png', crossOrigin, deferred);
+            };
 
             loadWithXhr.load = function(url, responseType, method, data, headers, deferred, overrideMimeType) {
                 expect(url).toEqual(missingImageUrl);
+                imageDownloaded = true;
                 return loadWithXhr.defaultLoad('Data/Images/Red16x16.png', responseType, method, data, headers, deferred);
             };
 
             var policy = new DiscardMissingTileImagePolicy({
-                missingImageUrl : missingImageUrl,
+                missingImageUrl : 'http://some.host.invalid/missingImage.png',
                 pixelsToCheck : [new Cartesian2(0, 0)]
             });
 
@@ -68,14 +68,14 @@ defineSuite([
             }, 'policy to become ready');
 
             runs(function() {
-                expect(loadImage.createImage).toHaveBeenCalled();
+                expect(imageDownloaded).toEqual(true);
             });
         });
     });
 
     describe('shouldDiscardImage', function() {
         it('discards an image that is identical to the missing image', function() {
-            var missingImageUrl = 'Data/Images/Red16x16.png';
+            var missingImageUrl = 'http://some.host.invalid/missingImage.png';
 
             var redImage;
             when(loadImage('Data/Images/Red16x16.png'), function(image) {
@@ -87,8 +87,20 @@ defineSuite([
                 greenImage = image;
             });
 
+            loadImage.createImage = function(url, crossOrigin, deferred) {
+                if (url.indexOf('blob:') !== 0) {
+                    expect(url).toEqual(missingImageUrl);
+                }
+                return loadImage.defaultCreateImage('Data/Images/Red16x16.png', crossOrigin, deferred);
+            };
+
+            loadWithXhr.load = function(url, responseType, method, data, headers, deferred, overrideMimeType) {
+                expect(url).toEqual(missingImageUrl);
+                return loadWithXhr.defaultLoad('Data/Images/Red16x16.png', responseType, method, data, headers, deferred);
+            };
+
             var policy = new DiscardMissingTileImagePolicy({
-                missingImageUrl : missingImageUrl,
+                missingImageUrl : 'http://some.host.invalid/missingImage.png',
                 pixelsToCheck : [new Cartesian2(0, 0)]
             });
 
@@ -111,15 +123,27 @@ defineSuite([
         });
 
         it('discards an image that is identical to the missing image even if the missing image is transparent', function() {
-            var missingImageUrl = 'Data/Images/Transparent.png';
+            var missingImageUrl = 'http://some.host.invalid/missingImage.png';
 
             var transparentImage;
             when(loadImage('Data/Images/Transparent.png'), function(image) {
                 transparentImage = image;
             });
 
+            loadImage.createImage = function(url, crossOrigin, deferred) {
+                if (url.indexOf('blob:') !== 0) {
+                    expect(url).toEqual(missingImageUrl);
+                }
+                return loadImage.defaultCreateImage('Data/Images/Transparent.png', crossOrigin, deferred);
+            };
+
+            loadWithXhr.load = function(url, responseType, method, data, headers, deferred, overrideMimeType) {
+                expect(url).toEqual(missingImageUrl);
+                return loadWithXhr.defaultLoad('Data/Images/Red16x16.png', responseType, method, data, headers, deferred);
+            };
+
             var policy = new DiscardMissingTileImagePolicy({
-                missingImageUrl : missingImageUrl,
+                missingImageUrl : 'http://some.host.invalid/missingImage.png',
                 pixelsToCheck : [new Cartesian2(0, 0)]
             });
 
@@ -137,15 +161,20 @@ defineSuite([
         });
 
         it('does not discard at all when the missing image is transparent and disableCheckIfAllPixelsAreTransparent is set', function() {
-            var missingImageUrl = 'Data/Images/Transparent.png';
+            var missingImageUrl = 'http://some.host.invalid/missingImage.png';
 
             var transparentImage;
             when(loadImage('Data/Images/Transparent.png'), function(image) {
                 transparentImage = image;
             });
 
+            loadImage.createImage = function(url, crossOrigin, deferred) {
+                expect(url).toEqual(missingImageUrl);
+                return loadImage.defaultCreateImage('Data/Images/Transparent.png', crossOrigin, deferred);
+            };
+
             var policy = new DiscardMissingTileImagePolicy({
-                missingImageUrl : missingImageUrl,
+                missingImageUrl : 'http://some.host.invalid/missingImage.png',
                 pixelsToCheck : [new Cartesian2(0, 0)],
                 disableCheckIfAllPixelsAreTransparent : true
             });
@@ -164,15 +193,25 @@ defineSuite([
         });
 
         it('throws if called before the policy is ready', function() {
+            loadImage.createImage = function(url, crossOrigin, deferred) {
+                return loadImage.defaultCreateImage('Data/Images/Transparent.png', crossOrigin, deferred);
+            };
+
+            loadWithXhr.load = function(url, responseType, method, data, headers, deferred, overrideMimeType) {
+                return loadWithXhr.defaultLoad('Data/Images/Transparent.png', responseType, method, data, headers, deferred);
+            };
+
             var policy = new DiscardMissingTileImagePolicy({
-                missingImageUrl : 'Data/Images/Transparent.png',
+                missingImageUrl : 'http://some.host.invalid/missingImage.png',
                 pixelsToCheck : [new Cartesian2(0, 0)],
                 disableCheckIfAllPixelsAreTransparent : true
             });
 
-            expect(function() {
+            function callShouldDiscardImage() {
                 policy.shouldDiscardImage(new Image());
-            }).toThrowDeveloperError();
+            }
+
+            expect(callShouldDiscardImage).toThrowDeveloperError();
         });
     });
 });

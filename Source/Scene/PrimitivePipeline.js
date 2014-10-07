@@ -361,10 +361,21 @@ define([
      * @private
      */
     PrimitivePipeline.combineGeometry = function(parameters) {
-        var geometries = geometryPipeline(parameters);
+        var clonedParameters = {
+            instances : parameters.instances,
+            pickIds : parameters.pickIds,
+            ellipsoid : parameters.ellipsoid,
+            projection : parameters.projection,
+            elementIndexUintSupported : parameters.elementIndexUintSupported,
+            scene3DOnly : parameters.scene3DOnly,
+            allowPicking : parameters.allowPicking,
+            vertexCacheOptimize : parameters.vertexCacheOptimize,
+            modelMatrix : Matrix4.clone(parameters.modelMatrix)
+        };
+        var geometries = geometryPipeline(clonedParameters);
         var attributeLocations = GeometryPipeline.createAttributeLocations(geometries[0]);
 
-        var instances = parameters.instances;
+        var instances = clonedParameters.instances;
         var perInstanceAttributeNames = getCommonPerInstanceAttributeNames(instances);
 
         var perInstanceAttributes = [];
@@ -378,7 +389,7 @@ define([
 
         return {
             geometries : geometries,
-            modelMatrix : parameters.modelMatrix,
+            modelMatrix : clonedParameters.modelMatrix,
             attributeLocations : attributeLocations,
             vaAttributes : perInstanceAttributes,
             vaAttributeLocations : indices
@@ -860,6 +871,7 @@ define([
 
         var ellipsoid = Ellipsoid.clone(packedParameters.ellipsoid);
         var projection = packedParameters.isGeographic ? new GeographicProjection(ellipsoid) : new WebMercatorProjection(ellipsoid);
+        var modelMatrix = Matrix4.clone(packedParameters.modelMatrix);
 
         return {
             instances : instances,
@@ -870,7 +882,7 @@ define([
             scene3DOnly : packedParameters.scene3DOnly,
             allowPicking : packedParameters.allowPicking,
             vertexCacheOptimize : packedParameters.vertexCacheOptimize,
-            modelMatrix : Matrix4.clone(packedParameters.modelMatrix)
+            modelMatrix : packedParameters.modelMatrix
         };
     };
 

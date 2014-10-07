@@ -1,11 +1,11 @@
 /*global defineSuite*/
 defineSuite([
         'Core/EllipseOutlineGeometry',
-        'Core/Cartesian3',
+        'Core/Cartographic',
         'Core/Ellipsoid'
     ], function(
         EllipseOutlineGeometry,
-        Cartesian3,
+        Cartographic,
         Ellipsoid) {
     "use strict";
     /*global jasmine,describe,xdescribe,it,xit,expect,beforeEach,afterEach,beforeAll,afterAll,spyOn,runs,waits,waitsFor*/
@@ -22,7 +22,7 @@ defineSuite([
     it('throws without a semiMajorAxis', function() {
         expect(function() {
             return new EllipseOutlineGeometry({
-                center : Cartesian3.fromDegrees(0,0),
+                center : Ellipsoid.WGS84.cartographicToCartesian(new Cartographic()),
                 semiMinorAxis : 1.0
             });
         }).toThrowDeveloperError();
@@ -31,7 +31,7 @@ defineSuite([
     it('throws without a semiMinorAxis', function() {
         expect(function() {
             return new EllipseOutlineGeometry({
-                center : Cartesian3.fromDegrees(0,0),
+                center : Ellipsoid.WGS84.cartographicToCartesian(new Cartographic()),
                 semiMajorAxis : 1.0
             });
         }).toThrowDeveloperError();
@@ -40,7 +40,7 @@ defineSuite([
     it('throws with a negative axis', function() {
         expect(function() {
             return new EllipseOutlineGeometry({
-                center : Cartesian3.fromDegrees(0,0),
+                center : Ellipsoid.WGS84.cartographicToCartesian(new Cartographic()),
                 semiMajorAxis : 1.0,
                 semiMinorAxis : -1.0
             });
@@ -50,7 +50,7 @@ defineSuite([
     it('throws with a negative granularity', function() {
         expect(function() {
             return new EllipseOutlineGeometry({
-                center : Cartesian3.fromDegrees(0,0),
+                center : Ellipsoid.WGS84.cartographicToCartesian(new Cartographic()),
                 semiMajorAxis : 1.0,
                 semiMinorAxis : 1.0,
                 granularity : -1.0
@@ -61,7 +61,7 @@ defineSuite([
     it('throws when semiMajorAxis is less than the semiMajorAxis', function() {
         expect(function() {
             return new EllipseOutlineGeometry({
-                center : Cartesian3.fromDegrees(0,0),
+                center : Ellipsoid.WGS84.cartographicToCartesian(new Cartographic()),
                 semiMajorAxis : 1.0,
                 semiMinorAxis : 2.0
             });
@@ -69,9 +69,10 @@ defineSuite([
     });
 
     it('computes positions', function() {
+        var ellipsoid = Ellipsoid.WGS84;
         var m = EllipseOutlineGeometry.createGeometry(new EllipseOutlineGeometry({
-            ellipsoid : Ellipsoid.WGS84,
-            center : Cartesian3.fromDegrees(0,0),
+            ellipsoid : ellipsoid,
+            center : ellipsoid.cartographicToCartesian(new Cartographic()),
             granularity : 0.75,
             semiMajorAxis : 1.0,
             semiMinorAxis : 1.0
@@ -83,9 +84,10 @@ defineSuite([
     });
 
     it('computes positions extruded', function() {
+        var ellipsoid = Ellipsoid.WGS84;
         var m = EllipseOutlineGeometry.createGeometry(new EllipseOutlineGeometry({
-            ellipsoid : Ellipsoid.WGS84,
-            center : Cartesian3.fromDegrees(0,0),
+            ellipsoid : ellipsoid,
+            center : ellipsoid.cartographicToCartesian(new Cartographic()),
             granularity : 0.75,
             semiMajorAxis : 1.0,
             semiMinorAxis : 1.0,
@@ -97,9 +99,10 @@ defineSuite([
     });
 
     it('computes positions extruded, no lines drawn between top and bottom', function() {
+        var ellipsoid = Ellipsoid.WGS84;
         var m = EllipseOutlineGeometry.createGeometry(new EllipseOutlineGeometry({
-            ellipsoid : Ellipsoid.WGS84,
-            center : Cartesian3.fromDegrees(0,0),
+            ellipsoid : ellipsoid,
+            center : ellipsoid.cartographicToCartesian(new Cartographic()),
             granularity : 0.75,
             semiMajorAxis : 1.0,
             semiMinorAxis : 1.0,

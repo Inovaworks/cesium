@@ -3,16 +3,16 @@ define([
         'Core/clone',
         'Core/defaultValue',
         'Core/defined',
-        'Core/queryToObject',
         'Scene/Scene',
-        'Specs/createCanvas'
+        'Specs/createCanvas',
+        'Specs/getQueryParameters'
     ], function(
         clone,
         defaultValue,
         defined,
-        queryToObject,
         Scene,
-        createCanvas) {
+        createCanvas,
+        getQueryParameters) {
     "use strict";
 
     function createScene(options) {
@@ -27,7 +27,7 @@ define([
 
         var scene = new Scene(options);
 
-        var parameters = queryToObject(window.location.search.substring(1));
+        var parameters = getQueryParameters();
         if (defined(parameters.webglValidation)) {
             var context = scene.context;
             context.validateShaderProgram = true;

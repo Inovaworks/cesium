@@ -56,10 +56,10 @@ define([
      * @example
      * // Example 1
      * var polygon = new Cesium.Polygon({
-     *   positions : Cartesian3.fromDegreesArray([
-     *     0.0, 0.0,
-     *     10.0, 0.0,
-     *     0.0, 10.0
+     *   positions : [
+     *     ellipsoid.cartographicToCartesian(new Cesium.Cartographic(...)),
+     *     ellipsoid.cartographicToCartesian(new Cesium.Cartographic(...)),
+     *     ellipsoid.cartographicToCartesian(new Cesium.Cartographic(...))
      *   ]
      * });
      *
@@ -72,11 +72,9 @@ define([
      *   blue  : 0.0,
      *   alpha : 1.0
      * };
-     * polygon.positions = Cesium.Cartesian3.fromDegreesArray([
-     *     0.0, 0.0,
-     *     10.0, 0.0,
-     *     0.0, 10.0
-     * ]);
+     * polygon.positions = [ellipsoid.cartographicToCartesian(new Cesium.Cartographic(...)),
+     *   ellipsoid.cartographicToCartesian(new Cesium.Cartographic(...)),
+     *   ellipsoid.cartographicToCartesian(new Cesium.Cartographic(...))];
      */
     var Polygon = function(options) {
         options = defaultValue(options, defaultValue.EMPTY_OBJECT);
@@ -215,11 +213,11 @@ define([
          * @memberof Polygon.prototype
          * @type {Cartesian3[]}
          * @example
-         * polygon.positions = Cesium.Cartesian3.fromDegreesArray([
-         *     0.0, 0.0,
-         *     10.0, 0.0,
-         *     0.0, 10.0
-         * ]);
+         * polygon.positions = [
+         *   ellipsoid.cartographicToCartesian(new Cesium.Cartographic(...)),
+         *   ellipsoid.cartographicToCartesian(new Cesium.Cartographic(...)),
+         *   ellipsoid.cartographicToCartesian(new Cesium.Cartographic(...))
+         * ];
          */
         positions: {
             get : function() {

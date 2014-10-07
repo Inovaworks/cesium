@@ -1,23 +1,19 @@
 /*global define*/
 define([
-        '../ThirdParty/Uri',
         '../ThirdParty/when',
-        './combine',
         './defaultValue',
         './defined',
-        './DeveloperError',
-        './objectToQuery',
-        './queryToObject'
+        './DeveloperError'
     ], function(
-        Uri,
         when,
-        combine,
         defaultValue,
         defined,
-        DeveloperError,
-        objectToQuery,
-        queryToObject) {
+        DeveloperError) {
     "use strict";
+
+    function pushQueryParameter(array, name, value) {
+        array.push(encodeURIComponent(name) + '=' + encodeURIComponent(value));
+    }
 
     /**
      * Requests a resource using JSONP.
@@ -50,13 +46,13 @@ define([
 
         options = defaultValue(options, defaultValue.EMPTY_OBJECT);
 
+        var deferred = when.defer();
+
         //generate a unique function name
         var functionName;
         do {
             functionName = 'jsonp' + Math.random().toString().substring(2, 8);
         } while (defined(window[functionName]));
-
-        var deferred = when.defer();
 
         //assign a function with that name in the global scope
         window[functionName] = function(data) {
@@ -69,20 +65,26 @@ define([
             }
         };
 
-        var uri = new Uri(url);
+        var callbackParameterName = defaultValue(options.callbackParameterName, 'callback');
+        var queryParts = [];
+        pushQueryParameter(queryParts, callbackParameterName, functionName);
 
-        var queryOptions = queryToObject(defaultValue(uri.query, ''));
-
-        if (defined(options.parameters)) {
-            queryOptions = combine(options.parameters, queryOptions);
+        var parameters = defaultValue(options.parameters, defaultValue.EMPTY_OBJECT);
+        for ( var name in parameters) {
+            if (parameters.hasOwnProperty(name)) {
+                pushQueryParameter(queryParts, name, parameters[name]);
+            }
         }
 
-        var callbackParameterName = defaultValue(options.callbackParameterName, 'callback');
-        queryOptions[callbackParameterName] = functionName;
+        if (queryParts.length > 0) {
+            if (url.indexOf('?') === -1) {
+                url += '?';
+            } else {
+                url += '&';
+            }
 
-        uri.query = objectToQuery(queryOptions);
-
-        url = uri.toString();
+            url += queryParts.join('&');
+        }
 
         var proxy = options.proxy;
         if (defined(proxy)) {

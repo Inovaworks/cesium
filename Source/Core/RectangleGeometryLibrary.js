@@ -4,8 +4,8 @@ define([
         './Cartographic',
         './defined',
         './DeveloperError',
-        './GeographicProjection',
         './Math',
+        './GeographicProjection',
         './Matrix2',
         './Rectangle'
     ], function(
@@ -13,8 +13,8 @@ define([
         Cartographic,
         defined,
         DeveloperError,
-        GeographicProjection,
         CesiumMath,
+        GeographicProjection,
         Matrix2,
         Rectangle) {
     "use strict";

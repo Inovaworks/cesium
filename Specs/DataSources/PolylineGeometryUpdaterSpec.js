@@ -2,8 +2,10 @@
 defineSuite([
         'DataSources/PolylineGeometryUpdater',
         'Core/Cartesian3',
+        'Core/Cartographic',
         'Core/Color',
         'Core/ColorGeometryInstanceAttribute',
+        'Core/Ellipsoid',
         'Core/JulianDate',
         'Core/ShowGeometryInstanceAttribute',
         'Core/TimeInterval',
@@ -23,8 +25,10 @@ defineSuite([
     ], function(
         PolylineGeometryUpdater,
         Cartesian3,
+        Cartographic,
         Color,
         ColorGeometryInstanceAttribute,
+        Ellipsoid,
         JulianDate,
         ShowGeometryInstanceAttribute,
         TimeInterval,
@@ -57,12 +61,7 @@ defineSuite([
 
     function createBasicPolyline() {
         var polyline = new PolylineGraphics();
-        polyline.positions = new ConstantProperty(Cartesian3.fromRadiansArray([
-            0, 0,
-            1, 0,
-            1, 1,
-            0, 1
-        ]));
+        polyline.positions = new ConstantProperty(Ellipsoid.WGS84.cartographicArrayToCartesianArray([new Cartographic(0, 0, 0), new Cartographic(1, 0, 0), new Cartographic(1, 1, 0), new Cartographic(0, 1, 0)]));
         var entity = new Entity();
         entity.polyline = polyline;
         return entity;
@@ -319,10 +318,7 @@ defineSuite([
         var listener = jasmine.createSpy('listener');
         updater.geometryChanged.addEventListener(listener);
 
-        entity.polyline.positions = new ConstantProperty(Cartesian3.fromRadiansArray([
-            0, 0,
-            1, 0
-        ]));
+        entity.polyline.positions = new ConstantProperty(Ellipsoid.WGS84.cartographicArrayToCartesianArray([new Cartographic(0, 0, 0), new Cartographic(1, 0, 0)]));
         expect(listener.callCount).toEqual(1);
 
         entity.polyline.width = new ConstantProperty(82);

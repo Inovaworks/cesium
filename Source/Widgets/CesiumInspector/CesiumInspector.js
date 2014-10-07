@@ -42,9 +42,7 @@ define([
 
         container = getElement(container);
 
-        var performanceContainer = document.createElement('div');
-
-        var viewModel = new CesiumInspectorViewModel(scene, performanceContainer);
+        var viewModel = new CesiumInspectorViewModel(scene);
         this._viewModel = viewModel;
         this._container = container;
 
@@ -97,9 +95,6 @@ define([
         pdCheckbox.setAttribute('data-bind', 'checked: performance, click: showPerformance');
         performanceDisplay.appendChild(pdCheckbox);
         performanceDisplay.appendChild(document.createTextNode('Performance Display'));
-
-        performanceContainer.className = 'cesium-cesiumInspector-performanceDisplay';
-        generalSection.appendChild(performanceContainer);
 
         // Primitives
         var prim = document.createElement('div');

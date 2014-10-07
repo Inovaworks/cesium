@@ -174,7 +174,7 @@ defineSuite([
     it('creates an animation in 3d with rectangle', function() {
         var camera = scene.camera;
 
-        var startPosition = Cartesian3.fromDegrees(CesiumMath.PI, 0, 20, scene.mapProjection.ellipsoid);
+        var startPosition = scene.mapProjection.ellipsoid.cartographicToCartesian(new Cartographic(CesiumMath.PI, 0, 20));
         camera.position = startPosition;
         var startDirection = Cartesian3.clone(camera.direction);
         var startUp = Cartesian3.clone(camera.up);

@@ -298,6 +298,7 @@ define([
         this._pickIds = [];
 
         this._needsUpdate = true;
+        this._needsInit = true;
     };
 
     defineProperties(Model.prototype, {
@@ -1669,6 +1670,17 @@ define([
 
         return scale;
     }
+    
+    function initModel(model, context){
+        
+    	parse(model);
+    	createSkins(model);
+        createAnimations(model);
+        createUniformMaps(model, context) ;
+        createRuntimeNodes(model, context); // using glTF scene
+        
+        model._needsInit = false;
+	}
 
     /**
      * Called when {@link Viewer} or {@link CesiumWidget} render the scene to
@@ -1700,6 +1712,8 @@ define([
         {
             var model = this;
             frameState.afterRender.push(function() {
+            
+            	initModel(model, context);
                 model._ready = true;
                 model.readyToRender.raiseEvent(model);
             });
@@ -1732,13 +1746,8 @@ define([
                 Matrix4.multiplyTransformation(computedModelMatrix, yUpToZUp, computedModelMatrix);
             }
 
-            if (this._needsUpdate)
-            {
-                parse(this);
-                createSkins(this);
-                createAnimations(this);
-                createUniformMaps(this, context) ;
-                createRuntimeNodes(this, context); // using glTF scene
+            if (this._needsUpdate && this._needsInit){
+            	initModel(this, context);
             }
 
             // Update modelMatrix throughout the graph as needed

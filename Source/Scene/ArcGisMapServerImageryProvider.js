@@ -119,8 +119,7 @@ define([
                 that._tileWidth = tileInfo.rows;
                 that._tileHeight = tileInfo.cols;
 
-                if (tileInfo.spatialReference.wkid === 102100 ||
-                    tileInfo.spatialReference.wkid === 102113) {
+                if (tileInfo.spatialReference.wkid === 102100) {
                     that._tilingScheme = new WebMercatorTilingScheme();
                 } else if (data.tileInfo.spatialReference.wkid === 4326) {
                     that._tilingScheme = new GeographicTilingScheme();
@@ -135,8 +134,7 @@ define([
                     var projection = that._tilingScheme.projection;
 
                     if (defined(data.fullExtent.spatialReference) && defined(data.fullExtent.spatialReference.wkid)) {
-                        if (data.fullExtent.spatialReference.wkid === 102100 ||
-                            data.fullExtent.spatialReference.wkid === 102113) {
+                        if (data.fullExtent.spatialReference.wkid === 102100) {
                             projection = new WebMercatorProjection();
                         } else if (data.fullExtent.spatialReference.wkid === 4326) {
                             projection = new GeographicProjection();

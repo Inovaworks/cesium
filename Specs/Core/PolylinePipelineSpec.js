@@ -2,12 +2,14 @@
 defineSuite([
         'Core/PolylinePipeline',
         'Core/Cartesian3',
+        'Core/Cartographic',
         'Core/Ellipsoid',
         'Core/Math',
         'Core/Transforms'
     ], function(
         PolylinePipeline,
         Cartesian3,
+        Cartographic,
         Ellipsoid,
         CesiumMath,
         Transforms) {
@@ -15,20 +17,22 @@ defineSuite([
     /*global jasmine,describe,xdescribe,it,xit,expect,beforeEach,afterEach,beforeAll,afterAll,spyOn,runs,waits,waitsFor*/
 
     it('wrapLongitude', function() {
-        var positions = Cartesian3.fromDegreesArray([
-            -75.163789, 39.952335,
-            -80.2264393, 25.7889689
-        ]);
+        var ellipsoid = Ellipsoid.WGS84;
+        var p1 = new Cartographic.fromDegrees(-75.163789, 39.952335);      // Philadelphia, PA
+        var p2 = new Cartographic.fromDegrees(-80.2264393, 25.7889689);    // Miami, FL
+        var positions = [ellipsoid.cartographicToCartesian(p1),
+                         ellipsoid.cartographicToCartesian(p2)];
         var segments = PolylinePipeline.wrapLongitude(positions);
         expect(segments.lengths.length).toEqual(1);
         expect(segments.lengths[0]).toEqual(2);
     });
 
     it('wrapLongitude breaks polyline into segments', function() {
-        var positions = Cartesian3.fromDegreesArray([
-            -179.0, 39.0,
-            2.0, 25.0
-        ]);
+        var ellipsoid = Ellipsoid.WGS84;
+        var p1 = new Cartographic.fromDegrees(-179.0, 39.0);
+        var p2 = new Cartographic.fromDegrees(2.0, 25.0);
+        var positions = [ellipsoid.cartographicToCartesian(p1),
+                         ellipsoid.cartographicToCartesian(p2)];
         var segments = PolylinePipeline.wrapLongitude(positions);
         expect(segments.lengths.length).toEqual(2);
         expect(segments.lengths[0]).toEqual(2);
@@ -36,8 +40,9 @@ defineSuite([
     });
 
     it('wrapLongitude breaks polyline into segments with model matrix', function() {
-        var center = Cartesian3.fromDegrees(-179.0, 39.0);
-        var matrix = Transforms.eastNorthUpToFixedFrame(center, Ellipsoid.WGS84);
+        var ellipsoid = Ellipsoid.WGS84;
+        var center = ellipsoid.cartographicToCartesian(new Cartographic.fromDegrees(-179.0, 39.0));
+        var matrix = Transforms.eastNorthUpToFixedFrame(center, ellipsoid);
 
         var positions = [ new Cartesian3(0.0, 0.0, 0.0),
                           new Cartesian3(0.0, 100000000.0, 0.0)];
@@ -85,15 +90,16 @@ defineSuite([
     });
 
     it('generateArc subdivides in half', function() {
-        var p1 = Cartesian3.fromDegrees(0, 0);
-        var p2 = Cartesian3.fromDegrees(90, 0);
-        var p3 = Cartesian3.fromDegrees(45, 0);
+        var ellipsoid = Ellipsoid.WGS84;
+        var p1 = ellipsoid.cartographicToCartesian(new Cartographic.fromDegrees(0, 0));
+        var p2 = ellipsoid.cartographicToCartesian(new Cartographic.fromDegrees(90, 0));
+        var p3 = ellipsoid.cartographicToCartesian(new Cartographic.fromDegrees(45, 0));
         var positions = [p1, p2];
 
         var newPositions = PolylinePipeline.generateArc({
             positions: positions,
             granularity: CesiumMath.PI_OVER_TWO/2,
-            ellipsoid: Ellipsoid.WGS84
+            ellipsoid: ellipsoid
         });
 
         expect(newPositions.length).toEqual(3*3);

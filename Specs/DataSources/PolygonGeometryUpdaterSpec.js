@@ -2,8 +2,10 @@
 defineSuite([
         'DataSources/PolygonGeometryUpdater',
         'Core/Cartesian3',
+        'Core/Cartographic',
         'Core/Color',
         'Core/ColorGeometryInstanceAttribute',
+        'Core/Ellipsoid',
         'Core/JulianDate',
         'Core/ShowGeometryInstanceAttribute',
         'Core/TimeInterval',
@@ -21,8 +23,10 @@ defineSuite([
     ], function(
         PolygonGeometryUpdater,
         Cartesian3,
+        Cartographic,
         Color,
         ColorGeometryInstanceAttribute,
+        Ellipsoid,
         JulianDate,
         ShowGeometryInstanceAttribute,
         TimeInterval,
@@ -44,12 +48,7 @@ defineSuite([
 
     function createBasicPolygon() {
         var polygon = new PolygonGraphics();
-        polygon.positions = new ConstantProperty(Cartesian3.fromRadiansArray([
-            0, 0,
-            1, 0,
-            1, 1,
-            0, 1
-        ]));
+        polygon.positions = new ConstantProperty(Ellipsoid.WGS84.cartographicArrayToCartesianArray([new Cartographic(0, 0, 0), new Cartographic(1, 0, 0), new Cartographic(1, 1, 0), new Cartographic(0, 1, 0)]));
         var entity = new Entity();
         entity.polygon = polygon;
         return entity;

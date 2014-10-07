@@ -4,7 +4,6 @@ define([
         '../Core/Cartesian2',
         '../Core/Cartesian3',
         '../Core/Cartesian4',
-        '../Core/Color',
         '../Core/defined',
         '../Core/defineProperties',
         '../Core/destroyObject',
@@ -35,7 +34,6 @@ define([
         Cartesian2,
         Cartesian3,
         Cartesian4,
-        Color,
         defined,
         defineProperties,
         destroyObject,
@@ -120,33 +118,9 @@ define([
             wireframe : false,
             boundingSphereTile : undefined
         };
-
-        this._baseColor = undefined;
-        this._firstPassInitialColor = undefined;
-        this.baseColor = new Color(0.0, 0.0, 0.5, 1.0);
     };
 
     defineProperties(GlobeSurfaceTileProvider.prototype, {
-        /**
-         * Gets or sets the color of the globe when no imagery is available.
-         * @memberof GlobeSurfaceTileProvider.prototype
-         * @type {Color}
-         */
-        baseColor : {
-            get : function() {
-                return this._baseColor;
-            },
-            set : function(value) {
-                //>>includeStart('debug', pragmas.debug);
-                if (!defined(value)) {
-                    throw new DeveloperError('value is required.');
-                }
-                //>>includeEnd('debug');
-
-                this._baseColor = value;
-                this._firstPassInitialColor = Cartesian4.fromColor(value, this._firstPassInitialColor);
-            }
-        },
         /**
          * Gets or sets the {@link QuadtreePrimitive} for which this provider is
          * providing tiles.  This property may be undefined if the provider is not yet associated
@@ -630,6 +604,10 @@ define([
             if (startIndex !== -1) {
                 tileImageryCollection.splice(startIndex, numDestroyed);
             }
+            // If the base layer has been removed, mark the tile as non-renderable.
+            if (layer.isBaseLayer()) {
+                tile.isRenderable = false;
+            }
         });
     };
 
@@ -792,6 +770,7 @@ define([
         return context.createVertexArray(vertexArray._attributes, wireframeIndexBuffer);
     }
 
+    var firstPassInitialColor = new Cartesian4(0.0, 0.0, 0.5, 1.0);
     var otherPassesInitialColor = new Cartesian4(0.0, 0.0, 0.0, 0.0);
 
     function addDrawCommandsForTile(tileProvider, tile, context, frameState, commandList) {
@@ -873,7 +852,7 @@ define([
         var otherPassesRenderState = tileProvider._blendRenderState;
         var renderState = firstPassRenderState;
 
-        var initialColor = tileProvider._firstPassInitialColor;
+        var initialColor = firstPassInitialColor;
 
         do {
             var numberOfDayTextures = 0;

@@ -2,6 +2,7 @@
 defineSuite([
         'Scene/PrimitiveCollection',
         'Core/Cartesian3',
+        'Core/Cartographic',
         'Core/defaultValue',
         'Core/Ellipsoid',
         'Core/Math',
@@ -19,6 +20,7 @@ defineSuite([
     ], function(
         PrimitiveCollection,
         Cartesian3,
+        Cartographic,
         defaultValue,
         Ellipsoid,
         CesiumMath,
@@ -90,12 +92,10 @@ defineSuite([
         var polygon = new Polygon();
         polygon.ellipsoid = ellipsoid;
         polygon.granularity = CesiumMath.toRadians(20.0);
-        polygon.positions = Cartesian3.fromDegreesArray([
-            -degree, -degree,
-            degree, -degree,
-            degree,  degree,
-            -degree,  degree
-        ], ellipsoid);
+        polygon.positions = [ellipsoid.cartographicToCartesian(Cartographic.fromDegrees(-degree, -degree, 0.0)),
+                              ellipsoid.cartographicToCartesian(Cartographic.fromDegrees( degree, -degree, 0.0)),
+                              ellipsoid.cartographicToCartesian(Cartographic.fromDegrees( degree,  degree, 0.0)),
+                              ellipsoid.cartographicToCartesian(Cartographic.fromDegrees(-degree,  degree, 0.0))];
         polygon.asynchronous = false;
         return polygon;
     }

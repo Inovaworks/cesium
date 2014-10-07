@@ -2,27 +2,25 @@
 defineSuite([
         'Core/ArcGisImageServerTerrainProvider',
         'Core/DefaultProxy',
+        'Core/defined',
         'Core/Ellipsoid',
         'Core/GeographicTilingScheme',
         'Core/HeightmapTerrainData',
         'Core/loadImage',
         'Core/Math',
-        'Core/queryToObject',
         'Core/TerrainProvider',
-        'Specs/waitsForPromise',
-        'ThirdParty/Uri'
+        'ThirdParty/when'
     ], function(
         ArcGisImageServerTerrainProvider,
         DefaultProxy,
+        defined,
         Ellipsoid,
         GeographicTilingScheme,
         HeightmapTerrainData,
         loadImage,
         CesiumMath,
-        queryToObject,
         TerrainProvider,
-        waitsForPromise,
-        Uri) {
+        when) {
     "use strict";
     /*global jasmine,describe,xdescribe,it,xit,expect,beforeEach,afterEach,beforeAll,afterAll,spyOn,runs,waits,waitsFor*/
 
@@ -40,7 +38,8 @@ defineSuite([
         }).toThrowDeveloperError();
 
         expect(function() {
-            return new ArcGisImageServerTerrainProvider({});
+            return new ArcGisImageServerTerrainProvider({
+            });
         }).toThrowDeveloperError();
     });
 
@@ -118,100 +117,113 @@ defineSuite([
         it('requests expanded rectangle to account for center versus edge', function() {
             var baseUrl = 'made/up/url';
 
+            loadImage.createImage = function(url, crossOrigin, deferred) {
+                expect(url.indexOf('exportImage?')).toBeGreaterThanOrEqualTo(0);
+                expect(url.indexOf('bbox=-181.40625%2C-91.40625%2C1.40625%2C91.40625')).toBeGreaterThanOrEqualTo(0);
+
+                // Just return any old image.
+                return loadImage.defaultCreateImage('Data/Images/Red16x16.png', crossOrigin, deferred);
+            };
+
             var terrainProvider = new ArcGisImageServerTerrainProvider({
                 url : baseUrl
             });
 
-            spyOn(loadImage, 'createImage').andCallFake(function(url, crossOrigin, deferred) {
-                var uri = new Uri(url);
-                var params = queryToObject(uri.query);
+            var promise = terrainProvider.requestTileGeometry(0, 0, 0);
 
-                expect(uri.path).toMatch(/exportImage$/);
-
-                expect(params.bbox).toEqual('-181.40625,-91.40625,1.40625,91.40625');
-
-                // Just return any old image.
-                loadImage.defaultCreateImage('Data/Images/Red16x16.png', crossOrigin, deferred);
+            var loaded = false;
+            when(promise, function(terrainData) {
+                loaded = true;
             });
 
-            waitsForPromise(terrainProvider.requestTileGeometry(0, 0, 0), function(terrainData) {
-                expect(loadImage.createImage).toHaveBeenCalled();
-                expect(terrainData).toBeDefined();
-            });
+            waitsFor(function() {
+                return loaded;
+            }, 'request to complete');
         });
 
         it('uses the token if one is supplied', function() {
             var baseUrl = 'made/up/url';
+
+            loadImage.createImage = function(url, crossOrigin, deferred) {
+                expect(url.indexOf('exportImage?')).toBeGreaterThanOrEqualTo(0);
+                expect(url.indexOf('token=foofoofoo')).toBeGreaterThanOrEqualTo(0);
+
+                // Just return any old image.
+                return loadImage.defaultCreateImage('Data/Images/Red16x16.png', crossOrigin, deferred);
+            };
 
             var terrainProvider = new ArcGisImageServerTerrainProvider({
                 url : baseUrl,
                 token : 'foofoofoo'
             });
 
-            spyOn(loadImage, 'createImage').andCallFake(function(url, crossOrigin, deferred) {
-                var uri = new Uri(url);
-                var params = queryToObject(uri.query);
+            var promise = terrainProvider.requestTileGeometry(0, 0, 0);
 
-                expect(uri.path).toMatch(/exportImage$/);
-
-                expect(params.token).toEqual('foofoofoo');
-
-                // Just return any old image.
-                loadImage.defaultCreateImage('Data/Images/Red16x16.png', crossOrigin, deferred);
+            var loaded = false;
+            when(promise, function(terrainData) {
+                loaded = true;
             });
 
-            waitsForPromise(terrainProvider.requestTileGeometry(0, 0, 0), function(terrainData) {
-                expect(loadImage.createImage).toHaveBeenCalled();
-                expect(terrainData).toBeDefined();
-            });
+            waitsFor(function() {
+                return loaded;
+            }, 'request to complete');
         });
 
         it('uses the proxy if one is supplied', function() {
             var baseUrl = 'made/up/url';
+
+            loadImage.createImage = function(url, crossOrigin, deferred) {
+                expect(url.indexOf('/proxy/?')).toBe(0);
+                expect(url.indexOf('exportImage%3F')).toBeGreaterThanOrEqualTo(0);
+
+                // Just return any old image.
+                return loadImage.defaultCreateImage('Data/Images/Red16x16.png', crossOrigin, deferred);
+            };
 
             var terrainProvider = new ArcGisImageServerTerrainProvider({
                 url : baseUrl,
                 proxy : new DefaultProxy('/proxy/')
             });
 
-            spyOn(loadImage, 'createImage').andCallFake(function(url, crossOrigin, deferred) {
-                var uri = new Uri(url);
-                var params = queryToObject(uri.query);
+            var promise = terrainProvider.requestTileGeometry(0, 0, 0);
 
-                expect(uri.path).toEqual('/proxy/');
-
-                uri = new Uri(decodeURIComponent(uri.query));
-
-                expect(uri.path).toMatch(/exportImage$/);
-
-                // Just return any old image.
-                loadImage.defaultCreateImage('Data/Images/Red16x16.png', crossOrigin, deferred);
+            var loaded = false;
+            when(promise, function(terrainData) {
+                loaded = true;
             });
 
-            waitsForPromise(terrainProvider.requestTileGeometry(0, 0, 0), function(terrainData) {
-                expect(loadImage.createImage).toHaveBeenCalled();
-                expect(terrainData).toBeDefined();
-            });
+            waitsFor(function() {
+                return loaded;
+            }, 'request to complete');
         });
 
         it('provides HeightmapTerrainData', function() {
             var baseUrl = 'made/up/url';
 
+            loadImage.createImage = function(url, crossOrigin, deferred) {
+                expect(url.indexOf('exportImage?')).toBeGreaterThanOrEqualTo(0);
+
+                // Just return any old image.
+                return loadImage.defaultCreateImage('Data/Images/Red16x16.png', crossOrigin, deferred);
+            };
+
             var terrainProvider = new ArcGisImageServerTerrainProvider({
                 url : baseUrl
             });
 
-            spyOn(loadImage, 'createImage').andCallFake(function(url, crossOrigin, deferred) {
-                var uri = new Uri(url);
-                expect(uri.path).toMatch(/exportImage$/);
+            var promise = terrainProvider.requestTileGeometry(0, 0, 0);
 
-                // Just return any old image.
-                loadImage.defaultCreateImage('Data/Images/Red16x16.png', crossOrigin, deferred);
+            var loadedData;
+            when(promise, function(terrainData) {
+                loadedData = terrainData;
             });
 
-            waitsForPromise(terrainProvider.requestTileGeometry(0, 0, 0), function(terrainData) {
-                expect(loadImage.createImage).toHaveBeenCalled();
-                expect(terrainData).toBeInstanceOf(HeightmapTerrainData);
+            waitsFor(function() {
+                return defined(loadedData);
+            }, 'request to complete');
+
+            runs(function() {
+                expect(loadedData).toBeInstanceOf(HeightmapTerrainData);
             });
         });
 

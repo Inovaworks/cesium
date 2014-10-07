@@ -3,18 +3,18 @@ define([
         'Core/clone',
         'Core/defaultValue',
         'Core/defined',
-        'Core/queryToObject',
         'Renderer/Context',
         'Specs/createCanvas',
-        'Specs/createFrameState'
+        'Specs/createFrameState',
+        'Specs/getQueryParameters'
     ], function(
         clone,
         defaultValue,
         defined,
-        queryToObject,
         Context,
         createCanvas,
-        createFrameState) {
+        createFrameState,
+        getQueryParameters) {
     "use strict";
 
     function createContext(options, canvasWidth, canvasHeight) {
@@ -27,7 +27,7 @@ define([
         var canvas = createCanvas(canvasWidth, canvasHeight);
         var context = new Context(canvas, options);
 
-        var parameters = queryToObject(window.location.search.substring(1));
+        var parameters = getQueryParameters();
         if (defined(parameters.webglValidation)) {
             context.validateShaderProgram = true;
             context.validateFramebuffer = true;

@@ -1,13 +1,13 @@
 /*global defineSuite*/
 defineSuite([
         'Core/EllipseGeometry',
-        'Core/Cartesian3',
+        'Core/Cartographic',
         'Core/Ellipsoid',
         'Core/Math',
         'Core/VertexFormat'
     ], function(
         EllipseGeometry,
-        Cartesian3,
+        Cartographic,
         Ellipsoid,
         CesiumMath,
         VertexFormat) {
@@ -26,7 +26,7 @@ defineSuite([
     it('throws without a semiMajorAxis', function() {
         expect(function() {
             return new EllipseGeometry({
-                center : Cartesian3.fromDegrees(0,0),
+                center : Ellipsoid.WGS84.cartographicToCartesian(new Cartographic()),
                 semiMinorAxis : 1.0
             });
         }).toThrowDeveloperError();
@@ -35,7 +35,7 @@ defineSuite([
     it('throws without a semiMinorAxis', function() {
         expect(function() {
             return new EllipseGeometry({
-                center : Cartesian3.fromDegrees(0,0),
+                center : Ellipsoid.WGS84.cartographicToCartesian(new Cartographic()),
                 semiMajorAxis : 1.0
             });
         }).toThrowDeveloperError();
@@ -44,7 +44,7 @@ defineSuite([
     it('throws with a negative axis', function() {
         expect(function() {
             return new EllipseGeometry({
-                center : Cartesian3.fromDegrees(0,0),
+                center : Ellipsoid.WGS84.cartographicToCartesian(new Cartographic()),
                 semiMajorAxis : 1.0,
                 semiMinorAxis : -1.0
             });
@@ -54,7 +54,7 @@ defineSuite([
     it('throws with a negative granularity', function() {
         expect(function() {
             return new EllipseGeometry({
-                center : Cartesian3.fromDegrees(0,0),
+                center : Ellipsoid.WGS84.cartographicToCartesian(new Cartographic()),
                 semiMajorAxis : 1.0,
                 semiMinorAxis : 1.0,
                 granularity : -1.0
@@ -65,7 +65,7 @@ defineSuite([
     it('throws when semiMajorAxis is less than the semiMajorAxis', function() {
         expect(function() {
             return new EllipseGeometry({
-                center : Cartesian3.fromDegrees(0,0),
+                center : Ellipsoid.WGS84.cartographicToCartesian(new Cartographic()),
                 semiMajorAxis : 1.0,
                 semiMinorAxis : 2.0
             });
@@ -73,10 +73,11 @@ defineSuite([
     });
 
     it('computes positions', function() {
+        var ellipsoid = Ellipsoid.WGS84;
         var m = EllipseGeometry.createGeometry(new EllipseGeometry({
             vertexFormat : VertexFormat.POSITION_ONLY,
-            ellipsoid : Ellipsoid.WGS84,
-            center : Cartesian3.fromDegrees(0,0),
+            ellipsoid : ellipsoid,
+            center : ellipsoid.cartographicToCartesian(new Cartographic()),
             granularity : 0.75,
             semiMajorAxis : 1.0,
             semiMinorAxis : 1.0
@@ -88,10 +89,11 @@ defineSuite([
     });
 
     it('compute all vertex attributes', function() {
+        var ellipsoid = Ellipsoid.WGS84;
         var m = EllipseGeometry.createGeometry(new EllipseGeometry({
             vertexFormat : VertexFormat.ALL,
-            ellipsoid : Ellipsoid.WGS84,
-            center : Cartesian3.fromDegrees(0,0),
+            ellipsoid : ellipsoid,
+            center : ellipsoid.cartographicToCartesian(new Cartographic()),
             granularity : 0.75,
             semiMajorAxis : 1.0,
             semiMinorAxis : 1.0
@@ -106,10 +108,11 @@ defineSuite([
     });
 
     it('compute texture coordinates with rotation', function() {
+        var ellipsoid = Ellipsoid.WGS84;
         var m = EllipseGeometry.createGeometry(new EllipseGeometry({
             vertexFormat : VertexFormat.POSITION_AND_ST,
-            ellipsoid : Ellipsoid.WGS84,
-            center : Cartesian3.fromDegrees(0,0),
+            ellipsoid : ellipsoid,
+            center : ellipsoid.cartographicToCartesian(new Cartographic()),
             granularity : 0.75,
             semiMajorAxis : 1.0,
             semiMinorAxis : 1.0,
@@ -129,10 +132,11 @@ defineSuite([
     });
 
     it('computes positions extruded', function() {
+        var ellipsoid = Ellipsoid.WGS84;
         var m = EllipseGeometry.createGeometry(new EllipseGeometry({
             vertexFormat : VertexFormat.POSITION_ONLY,
-            ellipsoid : Ellipsoid.WGS84,
-            center : Cartesian3.fromDegrees(0,0),
+            ellipsoid : ellipsoid,
+            center : ellipsoid.cartographicToCartesian(new Cartographic()),
             granularity : 0.75,
             semiMajorAxis : 1.0,
             semiMinorAxis : 1.0,
@@ -144,10 +148,11 @@ defineSuite([
     });
 
     it('compute all vertex attributes extruded', function() {
+        var ellipsoid = Ellipsoid.WGS84;
         var m = EllipseGeometry.createGeometry(new EllipseGeometry({
             vertexFormat : VertexFormat.ALL,
-            ellipsoid : Ellipsoid.WGS84,
-            center : Cartesian3.fromDegrees(0,0),
+            ellipsoid : ellipsoid,
+            center : ellipsoid.cartographicToCartesian(new Cartographic()),
             granularity : 0.75,
             semiMajorAxis : 1.0,
             semiMinorAxis : 1.0,

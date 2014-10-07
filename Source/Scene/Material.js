@@ -1357,7 +1357,7 @@ define([
             type : Material.PolylineGlowType,
             uniforms : {
                 color : new Color(0.0, 0.5, 1.0, 1.0),
-                glowPower : 0.25
+                glowPower : 0.1
             },
             source : PolylineGlowMaterial
         },

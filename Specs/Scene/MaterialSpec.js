@@ -2,6 +2,7 @@
 defineSuite([
         'Scene/Material',
         'Core/Cartesian3',
+        'Core/Cartographic',
         'Core/Color',
         'Core/Ellipsoid',
         'Core/Math',
@@ -16,6 +17,7 @@ defineSuite([
     ], function(
         Material,
         Cartesian3,
+        Cartographic,
         Color,
         Ellipsoid,
         CesiumMath,
@@ -58,20 +60,18 @@ defineSuite([
         polygon = new Polygon();
         polygon.ellipsoid = ellipsoid;
         polygon.granularity = CesiumMath.toRadians(20.0);
-        polygon.positions = Cartesian3.fromDegreesArray([
-            -50.0, -50.0,
-            50.0, -50.0,
-            50.0, 50.0,
-            -50.0, 50.0
-        ], ellipsoid);
+        polygon.positions = [ellipsoid.cartographicToCartesian(Cartographic.fromDegrees(-50.0, -50.0, 0.0)),
+            ellipsoid.cartographicToCartesian(Cartographic.fromDegrees(50.0, -50.0, 0.0)),
+            ellipsoid.cartographicToCartesian(Cartographic.fromDegrees(50.0, 50.0, 0.0)),
+            ellipsoid.cartographicToCartesian(Cartographic.fromDegrees(-50.0, 50.0, 0.0))];
         polygon.asynchronous = false;
 
         polylines = new PolylineCollection();
         polyline = polylines.add({
-            positions : Cartesian3.fromDegreesArray([
-                -50.0, 0.0,
-                50.0, 0.0
-            ], ellipsoid),
+            positions : [
+                ellipsoid.cartographicToCartesian(Cartographic.fromDegrees(-50.0, 0.0, 0.0)),
+                ellipsoid.cartographicToCartesian(Cartographic.fromDegrees( 50.0, 0.0, 0.0))
+            ],
             width : 5.0
         });
     });

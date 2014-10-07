@@ -2,11 +2,15 @@
 defineSuite([
         'Core/CorridorOutlineGeometry',
         'Core/Cartesian3',
-        'Core/CornerType'
+        'Core/Cartographic',
+        'Core/CornerType',
+        'Core/Ellipsoid'
     ], function(
         CorridorOutlineGeometry,
         Cartesian3,
-        CornerType) {
+        Cartographic,
+        CornerType,
+        Ellipsoid) {
     "use strict";
     /*global jasmine,describe,xdescribe,it,xit,expect,beforeEach,afterEach,beforeAll,afterAll,spyOn,runs,waits,waitsFor*/
 
@@ -18,10 +22,11 @@ defineSuite([
 
     it('throws without 2 unique positions', function() {
         expect(function() {
+            var ellipsoid = Ellipsoid.WGS84;
             return CorridorOutlineGeometry.createGeometry(new CorridorOutlineGeometry({
-                positions : Cartesian3.fromDegreesArray([
-                    90.0, -30.0,
-                    90.0, -30.0
+                positions : ellipsoid.cartographicArrayToCartesianArray([
+                    Cartographic.fromDegrees(90.0, -30.0),
+                    Cartographic.fromDegrees(90.0, -30.0)
                 ]),
                 width: 10000
             }));
@@ -37,10 +42,11 @@ defineSuite([
     });
 
     it('computes positions', function() {
+        var ellipsoid = Ellipsoid.WGS84;
         var m = CorridorOutlineGeometry.createGeometry(new CorridorOutlineGeometry({
-            positions : Cartesian3.fromDegreesArray([
-                90.0, -30.0,
-                90.0, -35.0
+            positions : ellipsoid.cartographicArrayToCartesianArray([
+                Cartographic.fromDegrees(90.0, -30.0),
+                Cartographic.fromDegrees(90.0, -35.0)
             ]),
             cornerType: CornerType.MITERED,
             width : 30000
@@ -51,10 +57,11 @@ defineSuite([
     });
 
     it('computes positions extruded', function() {
+        var ellipsoid = Ellipsoid.WGS84;
         var m = CorridorOutlineGeometry.createGeometry(new CorridorOutlineGeometry({
-            positions : Cartesian3.fromDegreesArray([
-                 90.0, -30.0,
-                 90.0, -35.0
+            positions : ellipsoid.cartographicArrayToCartesianArray([
+                 Cartographic.fromDegrees(90.0, -30.0),
+                 Cartographic.fromDegrees(90.0, -35.0)
             ]),
             cornerType: CornerType.MITERED,
             width : 30000,
@@ -66,11 +73,12 @@ defineSuite([
     });
 
     it('computes right turn', function() {
+        var ellipsoid = Ellipsoid.WGS84;
         var m = CorridorOutlineGeometry.createGeometry(new CorridorOutlineGeometry({
-            positions : Cartesian3.fromDegreesArray([
-                90.0, -30.0,
-                90.0, -31.0,
-                91.0, -31.0
+            positions : ellipsoid.cartographicArrayToCartesianArray([
+                Cartographic.fromDegrees(90.0, -30.0),
+                Cartographic.fromDegrees(90.0, -31.0),
+                Cartographic.fromDegrees(91.0, -31.0)
             ]),
             cornerType: CornerType.MITERED,
             width : 30000
@@ -81,11 +89,12 @@ defineSuite([
     });
 
     it('computes left turn', function() {
+        var ellipsoid = Ellipsoid.WGS84;
         var m = CorridorOutlineGeometry.createGeometry(new CorridorOutlineGeometry({
-            positions : Cartesian3.fromDegreesArray([
-                90.0, -30.0,
-                90.0, -31.0,
-                89.0, -31.0
+            positions : ellipsoid.cartographicArrayToCartesianArray([
+                Cartographic.fromDegrees(90.0, -30.0),
+                Cartographic.fromDegrees(90.0, -31.0),
+                Cartographic.fromDegrees(89.0, -31.0)
             ]),
             cornerType: CornerType.MITERED,
             width : 30000
@@ -96,12 +105,13 @@ defineSuite([
     });
 
     it('computes with rounded corners', function() {
+        var ellipsoid = Ellipsoid.WGS84;
         var m = CorridorOutlineGeometry.createGeometry(new CorridorOutlineGeometry({
-            positions : Cartesian3.fromDegreesArray([
-                90.0, -30.0,
-                90.0, -31.0,
-                89.0, -31.0,
-                89.0, -32.0
+            positions : ellipsoid.cartographicArrayToCartesianArray([
+                Cartographic.fromDegrees(90.0, -30.0),
+                Cartographic.fromDegrees(90.0, -31.0),
+                Cartographic.fromDegrees(89.0, -31.0),
+                Cartographic.fromDegrees(89.0, -32.0)
             ]),
             cornerType: CornerType.ROUNDED,
             width : 30000
@@ -114,12 +124,13 @@ defineSuite([
     });
 
     it('computes with beveled corners', function() {
+        var ellipsoid = Ellipsoid.WGS84;
         var m = CorridorOutlineGeometry.createGeometry(new CorridorOutlineGeometry({
-            positions : Cartesian3.fromDegreesArray([
-                 90.0, -30.0,
-                 90.0, -31.0,
-                 89.0, -31.0,
-                 89.0, -32.0
+            positions : ellipsoid.cartographicArrayToCartesianArray([
+                 Cartographic.fromDegrees(90.0, -30.0),
+                 Cartographic.fromDegrees(90.0, -31.0),
+                 Cartographic.fromDegrees(89.0, -31.0),
+                 Cartographic.fromDegrees(89.0, -32.0)
             ]),
             cornerType: CornerType.BEVELED,
             width : 30000

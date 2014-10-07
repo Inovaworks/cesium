@@ -2,11 +2,13 @@
 define([
         '../ThirdParty/Uri',
         '../ThirdParty/when',
-        './defaultValue'
+        './defaultValue',
+        './defined'
     ], function(
         Uri,
         when,
-        defaultValue) {
+        defaultValue,
+        defined) {
     "use strict";
 
     var maximumRequestsPerServer = 6;

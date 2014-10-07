@@ -3,12 +3,16 @@ defineSuite([
         'Core/PolylineVolumeOutlineGeometry',
         'Core/Cartesian2',
         'Core/Cartesian3',
-        'Core/CornerType'
+        'Core/Cartographic',
+        'Core/CornerType',
+        'Core/Ellipsoid'
     ], function(
         PolylineVolumeOutlineGeometry,
         Cartesian2,
         Cartesian3,
-        CornerType) {
+        Cartographic,
+        CornerType,
+        Ellipsoid) {
     "use strict";
     /*global jasmine,describe,xdescribe,it,xit,expect,beforeEach,afterEach,beforeAll,afterAll,spyOn,runs,waits,waitsFor*/
 
@@ -51,10 +55,11 @@ defineSuite([
     });
 
     it('computes positions', function() {
+        var ellipsoid = Ellipsoid.WGS84;
         var m = PolylineVolumeOutlineGeometry.createGeometry(new PolylineVolumeOutlineGeometry({
-            polylinePositions : Cartesian3.fromDegreesArray([
-                90.0, -30.0,
-                90.0, -35.0
+            polylinePositions : ellipsoid.cartographicArrayToCartesianArray([
+                Cartographic.fromDegrees(90.0, -30.0),
+                Cartographic.fromDegrees(90.0, -35.0)
             ]),
             shapePositions: shape,
             cornerType: CornerType.MITERED
@@ -65,10 +70,11 @@ defineSuite([
     });
 
     it('computes positions, clockwise shape', function() {
+        var ellipsoid = Ellipsoid.WGS84;
         var m = PolylineVolumeOutlineGeometry.createGeometry(new PolylineVolumeOutlineGeometry({
-            polylinePositions : Cartesian3.fromDegreesArray([
-                90.0, -30.0,
-                90.0, -35.0
+            polylinePositions : ellipsoid.cartographicArrayToCartesianArray([
+                Cartographic.fromDegrees(90.0, -30.0),
+                Cartographic.fromDegrees(90.0, -35.0)
             ]),
             shapePositions: shape.reverse(),
             cornerType: CornerType.MITERED
@@ -79,11 +85,12 @@ defineSuite([
     });
 
     it('computes right turn', function() {
+        var ellipsoid = Ellipsoid.WGS84;
         var m = PolylineVolumeOutlineGeometry.createGeometry(new PolylineVolumeOutlineGeometry({
-            polylinePositions : Cartesian3.fromDegreesArray([
-                90.0, -30.0,
-                90.0, -31.0,
-                91.0, -31.0
+            polylinePositions : ellipsoid.cartographicArrayToCartesianArray([
+                Cartographic.fromDegrees(90.0, -30.0),
+                Cartographic.fromDegrees(90.0, -31.0),
+                Cartographic.fromDegrees(91.0, -31.0)
             ]),
             cornerType: CornerType.MITERED,
             shapePositions: shape
@@ -94,11 +101,12 @@ defineSuite([
     });
 
     it('computes left turn', function() {
+        var ellipsoid = Ellipsoid.WGS84;
         var m = PolylineVolumeOutlineGeometry.createGeometry(new PolylineVolumeOutlineGeometry({
-            polylinePositions : Cartesian3.fromDegreesArray([
-                90.0, -30.0,
-                90.0, -31.0,
-                89.0, -31.0
+            polylinePositions : ellipsoid.cartographicArrayToCartesianArray([
+                Cartographic.fromDegrees(90.0, -30.0),
+                Cartographic.fromDegrees(90.0, -31.0),
+                Cartographic.fromDegrees(89.0, -31.0)
             ]),
             cornerType: CornerType.MITERED,
             shapePositions: shape
@@ -109,12 +117,13 @@ defineSuite([
     });
 
     it('computes with rounded corners', function() {
+        var ellipsoid = Ellipsoid.WGS84;
         var m = PolylineVolumeOutlineGeometry.createGeometry(new PolylineVolumeOutlineGeometry({
-            polylinePositions : Cartesian3.fromDegreesArray([
-                90.0, -30.0,
-                90.0, -31.0,
-                89.0, -31.0,
-                89.0, -32.0
+            polylinePositions : ellipsoid.cartographicArrayToCartesianArray([
+                Cartographic.fromDegrees(90.0, -30.0),
+                Cartographic.fromDegrees(90.0, -31.0),
+                Cartographic.fromDegrees(89.0, -31.0),
+                Cartographic.fromDegrees(89.0, -32.0)
             ]),
             cornerType: CornerType.ROUNDED,
             shapePositions: shape
@@ -126,12 +135,13 @@ defineSuite([
     });
 
     it('computes with beveled corners', function() {
+        var ellipsoid = Ellipsoid.WGS84;
         var m = PolylineVolumeOutlineGeometry.createGeometry(new PolylineVolumeOutlineGeometry({
-            polylinePositions : Cartesian3.fromDegreesArray([
-                 90.0, -30.0,
-                 90.0, -31.0,
-                 89.0, -31.0,
-                 89.0, -32.0
+            polylinePositions : ellipsoid.cartographicArrayToCartesianArray([
+                 Cartographic.fromDegrees(90.0, -30.0),
+                 Cartographic.fromDegrees(90.0, -31.0),
+                 Cartographic.fromDegrees(89.0, -31.0),
+                 Cartographic.fromDegrees(89.0, -32.0)
             ]),
             cornerType: CornerType.BEVELED,
             shapePositions: shape

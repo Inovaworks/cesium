@@ -7,7 +7,6 @@ define([
         '../Core/defaultValue',
         '../Core/defined',
         '../Core/defineProperties',
-        '../Core/deprecationWarning',
         '../Core/IntersectionTests',
         '../Core/PixelFormat',
         '../Core/Rectangle',
@@ -28,7 +27,6 @@ define([
         defaultValue,
         defined,
         defineProperties,
-        deprecationWarning,
         IntersectionTests,
         PixelFormat,
         Rectangle,
@@ -277,13 +275,13 @@ define([
             }
         }
 
-        if (defined(this.wireframeVertexArray)) {
+        if (typeof this.wireframeVertexArray !== 'undefined') {
             indexBuffer = this.wireframeVertexArray.indexBuffer;
 
             this.wireframeVertexArray.destroy();
             this.wireframeVertexArray = undefined;
 
-            if (!indexBuffer.isDestroyed() && defined(indexBuffer.referenceCount)) {
+            if (!indexBuffer.isDestroyed() && typeof indexBuffer.referenceCount !== 'undefined') {
                 --indexBuffer.referenceCount;
                 if (indexBuffer.referenceCount === 0) {
                     indexBuffer.destroy();
@@ -380,7 +378,7 @@ define([
             surfaceTile.upsampledTerrain = new TileTerrain(upsampleTileDetails);
         }
 
-        if (isDataAvailable(tile, terrainProvider)) {
+        if (isDataAvailable(tile)) {
             surfaceTile.loadedTerrain = new TileTerrain();
         }
 
@@ -620,17 +618,7 @@ define([
         }
     }
 
-    function isDataAvailable(tile, terrainProvider) {
-
-        if (defined(terrainProvider.getTileDataAvailable)) {
-            var tileDataAvailable = terrainProvider.getTileDataAvailable(tile.x, tile.y, tile.level);
-            if (defined(tileDataAvailable)) {
-                return tileDataAvailable;
-            }
-        } else {
-            deprecationWarning('TerrainProvider.getTileDataAvailable', 'TerrainProviders must now implement the getTileDataAvailable function.');
-        }
-
+    function isDataAvailable(tile) {
         var parent = tile.parent;
         if (!defined(parent)) {
             // Data is assumed to be available for root tiles.

@@ -5,14 +5,14 @@ defineSuite([
         'Core/GeographicTilingScheme',
         'Core/WebMercatorTilingScheme',
         'Scene/ImageryProvider',
-        'Specs/waitsForPromise'
+        'ThirdParty/when'
     ], function(
         TileCoordinatesImageryProvider,
         defined,
         GeographicTilingScheme,
         WebMercatorTilingScheme,
         ImageryProvider,
-        waitsForPromise) {
+        when) {
     "use strict";
     /*global jasmine,describe,xdescribe,it,xit,expect,beforeEach,afterEach,beforeAll,afterAll,spyOn,runs,waits,waitsFor*/
 
@@ -39,6 +39,8 @@ defineSuite([
             return provider.ready;
         }, 'imagery provider to become ready');
 
+        var tile000Image;
+
         runs(function() {
             expect(provider.tileWidth).toEqual(256);
             expect(provider.tileHeight).toEqual(256);
@@ -47,9 +49,17 @@ defineSuite([
             expect(provider.tileDiscardPolicy).toBeUndefined();
             expect(provider.rectangle).toEqual(new GeographicTilingScheme().rectangle);
 
-            waitsForPromise(provider.requestImage(0, 0, 0), function(image) {
-                expect(image).toBeDefined();
+            when(provider.requestImage(0, 0, 0), function(image) {
+                tile000Image = image;
             });
+        });
+
+        waitsFor(function() {
+            return defined(tile000Image);
+        }, 'requested tile to be loaded');
+
+        runs(function() {
+            expect(tile000Image).toBeDefined();
         });
     });
 

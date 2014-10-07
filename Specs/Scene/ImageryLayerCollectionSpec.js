@@ -2,6 +2,7 @@
 defineSuite([
         'Scene/ImageryLayerCollection',
         'Core/Cartesian3',
+        'Core/defined',
         'Core/Ellipsoid',
         'Core/Event',
         'Core/GeographicTilingScheme',
@@ -18,6 +19,7 @@ defineSuite([
     ], function(
         ImageryLayerCollection,
         Cartesian3,
+        defined,
         Ellipsoid,
         Event,
         GeographicTilingScheme,

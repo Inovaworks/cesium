@@ -3,16 +3,20 @@ defineSuite([
         'Scene/SceneTransforms',
         'Core/Cartesian2',
         'Core/Cartesian3',
+        'Core/Cartographic',
         'Core/Ellipsoid',
         'Core/Math',
+        'Scene/SceneMode',
         'Specs/createScene',
         'Specs/destroyScene'
     ], function(
         SceneTransforms,
         Cartesian2,
         Cartesian3,
+        Cartographic,
         Ellipsoid,
         CesiumMath,
+        SceneMode,
         createScene,
         destroyScene) {
     "use strict";
@@ -41,7 +45,7 @@ defineSuite([
 
     it('throws an exception without scene', function() {
         var ellipsoid = Ellipsoid.WGS84;
-        var position = Cartesian3.fromDegrees(0.0, 0.0);
+        var position = ellipsoid.cartographicToCartesian(new Cartographic(0.0, 0.0));
         expect(function() {
             SceneTransforms.wgs84ToWindowCoordinates(undefined, position);
         }).toThrowDeveloperError();
@@ -173,7 +177,7 @@ defineSuite([
         scene.initializeFrame();
 
         var ellipsoid = Ellipsoid.WGS84;
-        var position = Cartesian3.fromDegrees(0,0);
+        var position = ellipsoid.cartographicToCartesian(new Cartographic());
 
         var windowCoordinates = SceneTransforms.wgs84ToWindowCoordinates(scene, position);
         expect(windowCoordinates.x).toEqualEpsilon(0.5, CesiumMath.EPSILON2);
@@ -187,7 +191,7 @@ defineSuite([
         scene.render();
 
         var ellipsoid = Ellipsoid.WGS84;
-        var position = Cartesian3.fromDegrees(0,0);
+        var position = ellipsoid.cartographicToCartesian(new Cartographic());
 
         var drawingBufferCoordinates = SceneTransforms.wgs84ToDrawingBufferCoordinates(scene, position);
         expect(drawingBufferCoordinates.x).toEqualEpsilon(0.5, CesiumMath.EPSILON2);

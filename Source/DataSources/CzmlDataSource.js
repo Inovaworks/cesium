@@ -1117,7 +1117,7 @@ define([
 
     function processModel(entity, packet, entityCollection, sourceUri) {
         var modelData = packet.model;
-        if (!defined(modelData)) {
+        if (typeof modelData === 'undefined') {
             return;
         }
 
@@ -1417,7 +1417,7 @@ define([
         if (defined(documentPacket.name) && dataSource._name !== documentPacket.name) {
             dataSource._name = documentPacket.name;
             raiseChangedEvent = true;
-        } else if (!defined(dataSource._name) && defined(sourceUri)) {
+        } else if (defined(sourceUri)) {
             dataSource._name = getFilenameFromUri(sourceUri);
             raiseChangedEvent = true;
         }

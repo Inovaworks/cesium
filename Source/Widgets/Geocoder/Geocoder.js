@@ -66,7 +66,6 @@ define([
         textBox.setAttribute('data-bind', '\
 value: searchText,\
 valueUpdate: "afterkeydown",\
-disable: isSearchInProgress,\
 css: { "cesium-geocoder-input-wide" : searchText.length > 0 }');
         form.appendChild(textBox);
 

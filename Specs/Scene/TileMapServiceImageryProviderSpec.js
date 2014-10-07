@@ -7,6 +7,7 @@ defineSuite([
         'Core/defined',
         'Core/GeographicProjection',
         'Core/GeographicTilingScheme',
+        'Core/jsonp',
         'Core/loadImage',
         'Core/loadWithXhr',
         'Core/Math',
@@ -17,7 +18,7 @@ defineSuite([
         'Scene/ImageryLayer',
         'Scene/ImageryProvider',
         'Scene/ImageryState',
-        'Specs/waitsForPromise'
+        'ThirdParty/when'
     ], function(
         TileMapServiceImageryProvider,
         Cartesian2,
@@ -26,6 +27,7 @@ defineSuite([
         defined,
         GeographicProjection,
         GeographicTilingScheme,
+        jsonp,
         loadImage,
         loadWithXhr,
         CesiumMath,
@@ -36,11 +38,12 @@ defineSuite([
         ImageryLayer,
         ImageryProvider,
         ImageryState,
-        waitsForPromise) {
+        when) {
     "use strict";
     /*global jasmine,describe,xdescribe,it,xit,expect,beforeEach,afterEach,beforeAll,afterAll,spyOn,runs,waits,waitsFor*/
 
     afterEach(function() {
+        jsonp.loadAndExecuteScript = jsonp.defaultLoadAndExecuteScript;
         loadImage.createImage = loadImage.defaultCreateImage;
         loadWithXhr.load = loadWithXhr.defaultLoad;
     });
@@ -80,17 +83,18 @@ defineSuite([
         }, 'imagery provider to become ready');
 
         runs(function() {
-            spyOn(loadImage, 'createImage').andCallFake(function(url, crossOrigin, deferred) {
-                expect(url).not.toContain('//');
+            var calledLoadImage = false;
+            loadImage.createImage = function(url, crossOrigin, deferred) {
+                var doubleSlashIndex = url.indexOf('//');
+                expect(doubleSlashIndex).toBeLessThan(0);
 
-                // Just return any old image.
-                loadImage.defaultCreateImage('Data/Images/Red16x16.png', crossOrigin, deferred);
-            });
+                calledLoadImage = true;
+                deferred.resolve();
+                return undefined;
+            };
 
-            waitsForPromise(provider.requestImage(0, 0, 0), function(image) {
-                expect(loadImage.createImage).toHaveBeenCalled();
-                expect(image).toBeInstanceOf(Image);
-            });
+            provider.requestImage(0, 0, 0);
+            expect(calledLoadImage).toEqual(true);
         });
     });
 
@@ -104,17 +108,18 @@ defineSuite([
         }, 'imagery provider to become ready');
 
         runs(function() {
-            spyOn(loadImage, 'createImage').andCallFake(function(url, crossOrigin, deferred) {
-                expect(url).toContain('made/up/tms/server/');
+            var calledLoadImage = false;
+            loadImage.createImage = function(url, crossOrigin, deferred) {
+                var index = url.indexOf('made/up/tms/server/');
+                expect(index).toBeGreaterThan(-1);
 
-                // Just return any old image.
-                loadImage.defaultCreateImage('Data/Images/Red16x16.png', crossOrigin, deferred);
-            });
+                calledLoadImage = true;
+                deferred.resolve();
+                return undefined;
+            };
 
-            waitsForPromise(provider.requestImage(0, 0, 0), function(image) {
-                expect(loadImage.createImage).toHaveBeenCalled();
-                expect(image).toBeInstanceOf(Image);
-            });
+            provider.requestImage(0, 0, 0);
+            expect(calledLoadImage).toEqual(true);
         });
     });
 
@@ -129,6 +134,8 @@ defineSuite([
             return provider.ready;
         }, 'imagery provider to become ready');
 
+        var tile000Image;
+
         runs(function() {
             expect(provider.tileWidth).toEqual(256);
             expect(provider.tileHeight).toEqual(256);
@@ -136,15 +143,22 @@ defineSuite([
             expect(provider.tilingScheme).toBeInstanceOf(WebMercatorTilingScheme);
             expect(provider.rectangle).toEqual(new WebMercatorTilingScheme().rectangle);
 
-            spyOn(loadImage, 'createImage').andCallFake(function(url, crossOrigin, deferred) {
+            loadImage.createImage = function(url, crossOrigin, deferred) {
                 // Just return any old image.
-                loadImage.defaultCreateImage('Data/Images/Red16x16.png', crossOrigin, deferred);
-            });
+                return loadImage.defaultCreateImage('Data/Images/Red16x16.png', crossOrigin, deferred);
+            };
 
-            waitsForPromise(provider.requestImage(0, 0, 0), function(image) {
-                expect(loadImage.createImage).toHaveBeenCalled();
-                expect(image).toBeInstanceOf(Image);
+            when(provider.requestImage(0, 0, 0), function(image) {
+                tile000Image = image;
             });
+        });
+
+        waitsFor(function() {
+            return defined(tile000Image);
+        }, 'requested tile to be loaded');
+
+        runs(function() {
+            expect(tile000Image).toBeInstanceOf(Image);
         });
     });
 
@@ -174,20 +188,28 @@ defineSuite([
             return provider.ready;
         }, 'imagery provider to become ready');
 
-        runs(function() {
-            expect(provider.proxy).toEqual(proxy);
+        var tile000Image;
 
-            spyOn(loadImage, 'createImage').andCallFake(function(url, crossOrigin, deferred) {
+        runs(function() {
+            loadImage.createImage = function(url, crossOrigin, deferred) {
                 expect(url.indexOf(proxy.getURL('made/up/tms/server'))).toEqual(0);
+                expect(provider.proxy).toEqual(proxy);
 
                 // Just return any old image.
-                loadImage.defaultCreateImage('Data/Images/Red16x16.png', crossOrigin, deferred);
-            });
+                return loadImage.defaultCreateImage('Data/Images/Red16x16.png', crossOrigin, deferred);
+            };
 
-            waitsForPromise(provider.requestImage(0, 0, 0), function(image) {
-                expect(loadImage.createImage).toHaveBeenCalled();
-                expect(image).toBeInstanceOf(Image);
+            when(provider.requestImage(0, 0, 0), function(image) {
+                tile000Image = image;
             });
+        });
+
+        waitsFor(function() {
+            return defined(tile000Image);
+        }, 'requested tile to be loaded');
+
+        runs(function() {
+            expect(tile000Image).toBeInstanceOf(Image);
         });
     });
 
@@ -210,17 +232,16 @@ defineSuite([
             expect(provider.rectangle).toEqual(rectangle);
             expect(provider.tileDiscardPolicy).toBeUndefined();
 
-            spyOn(loadImage, 'createImage').andCallFake(function(url, crossOrigin, deferred) {
-                expect(url).toContain('/0/0/0');
+            var calledLoadImage = false;
+            loadImage.createImage = function(url, crossOrigin, deferred) {
+                expect(url.indexOf('/0/0/0')).not.toBeLessThan(0);
+                calledLoadImage = true;
+                deferred.resolve();
+                return undefined;
+            };
 
-                // Just return any old image.
-                loadImage.defaultCreateImage('Data/Images/Red16x16.png', crossOrigin, deferred);
-            });
-
-            waitsForPromise(provider.requestImage(0, 0, 0), function(image) {
-                expect(loadImage.createImage).toHaveBeenCalled();
-                expect(image).toBeInstanceOf(Image);
-            });
+            provider.requestImage(0, 0, 0);
+            expect(calledLoadImage).toEqual(true);
         });
     });
 
@@ -256,15 +277,14 @@ defineSuite([
         });
 
         loadImage.createImage = function(url, crossOrigin, deferred) {
+            // Succeed after 2 tries
             if (tries === 2) {
-                // Succeed after 2 tries
-                loadImage.defaultCreateImage('Data/Images/Red16x16.png', crossOrigin, deferred);
-            } else {
-                // fail
-                setTimeout(function() {
-                    deferred.reject();
-                }, 1);
+                // valid URL
+                return loadImage.defaultCreateImage('Data/Images/Red16x16.png', crossOrigin, deferred);
             }
+
+            // invalid URL
+            return loadImage.defaultCreateImage(url, crossOrigin, deferred);
         };
 
         waitsFor(function() {
@@ -645,3 +665,4 @@ defineSuite([
         });
     });
 });
+

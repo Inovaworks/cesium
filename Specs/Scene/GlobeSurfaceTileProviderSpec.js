@@ -3,7 +3,6 @@ defineSuite([
         'Scene/GlobeSurfaceTileProvider',
         'Core/Cartesian3',
         'Core/CesiumTerrainProvider',
-        'Core/Color',
         'Core/Credit',
         'Core/defined',
         'Core/Ellipsoid',
@@ -30,7 +29,6 @@ defineSuite([
         GlobeSurfaceTileProvider,
         Cartesian3,
         CesiumTerrainProvider,
-        Color,
         Credit,
         defined,
         Ellipsoid,
@@ -409,20 +407,6 @@ defineSuite([
         });
     });
 
-    it('can change baseColor', function() {
-        var layerCollection = globe.imageryLayers;
-        layerCollection.removeAll();
-        globe.baseColor = Color.RED;
-        frameState.camera.viewRectangle(new Rectangle(0.0001, 0.0001, 0.0025, 0.0025), Ellipsoid.WGS84);
-
-        updateUntilDone(globe);
-
-        runs(function() {
-            expect(render(context, frameState, globe)).toBeGreaterThan(0);
-            expect(context.readPixels()).toEqual([255, 0, 0, 255]);
-        });
-    });
-
     it('renders in 3D and then Columbus View', function() {
         var layerCollection = globe.imageryLayers;
         layerCollection.removeAll();
@@ -720,11 +704,4 @@ defineSuite([
             });
         });
     });
-
-    it('throws if baseColor is assigned undefined', function() {
-        expect(function() {
-            surface.tileProvider.baseColor = undefined;
-        }).toThrowDeveloperError();
-    });
-
 }, 'WebGL');
