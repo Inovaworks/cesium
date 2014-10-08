@@ -55,12 +55,13 @@
             var proxyGraphics = entity.proxy;
 
             var position;
-            var orientation;
+            var rotation = 0;
             var data = hash[entity.id];
             var show = entity.isAvailable(time) && Cesium.Property.getValueOrDefault(proxyGraphics._show, time, true);
 
             if (show) {
                 position = Cesium.Property.getValueOrUndefined(entity._position, time, cachedPosition);
+                rotation = Cesium.Property.getValueOrDefault(entity._rotation, time, true);
                 show = Cesium.defined(position);
             }
 
@@ -104,6 +105,7 @@
                         var myBillboard = billboards.add({        
                         show : true,
                         position : position,
+                        rotation:  rotation,
                         image : obj.image,
                         scale : Cesium.defaultValue(obj.scale, 1.0),
                         color : Cesium.defaultValue(obj.color, Cesium.Color.WHITE),
