@@ -121,13 +121,14 @@
                 }
                 
             
-                primitive = new ProxyPrimitive(position, objects, this._primitives);
+                primitive = new ProxyPrimitive(position, rotation, objects, this._primitives);
                 primitive.id = entity;
                 primitives.add(primitive);
 
                 data = {
                     primitive : primitive,
-                    position : undefined
+                    position : undefined,
+                    rotation: undefined
                 };
                 hash[entity.id] = data;
             }
@@ -136,7 +137,12 @@
                 data.position = Cesium.Cartesian3.clone(position, data.position);
                 primitive.position = data.position;
             }
-            
+
+            if (rotation!=data.rotation) {
+                data.rotation = rotation;
+                primitive.rotation = data.rotation;
+            }
+
             primitive.show = true;
         }
         

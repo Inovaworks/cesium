@@ -12,12 +12,16 @@
      *  Options:        
      *      fadeDistance    Not working yet
      */
-    var ProxyPrimitive = function(position, objects, options) {
+    var ProxyPrimitive = function(position, rotation, objects, primitives, options) {
 
         //>>includeStart('debug', pragmas.debug);
 
         if (!Cesium.defined(position)) {
             throw new Cesium.DeveloperError('position is required');
+        }
+
+        if (!Cesium.defined(rotation)) {
+            throw new Cesium.DeveloperError('rotation is required');
         }
 
         if (!Cesium.defined(objects)) {
@@ -26,16 +30,17 @@
 
         //>>includeEnd('debug');
     
-        options = Cesium.defaultValue(options, Cesium.defaultValue.EMPTY_OBJECT);
-
         this._position = position;
-        this._objects = objects;
+        this._rotation = rotation;
         
-        this._rotation = Cesium.defaultValue(options.rotation, 0.0);
+        this._objects = objects;
+        this._primitives = primitives;
+        
+        options = Cesium.defaultValue(options, Cesium.defaultValue.EMPTY_OBJECT);
         
         this._transformMatrix = Cesium.Matrix4.fromUniformScale(1.0, this._transformMatrix);
         
-        this._fadeDistance = Cesium.defaultValue(options.fadeDistance, 10000.0);
+        //this._fadeDistance = Cesium.defaultValue(options.fadeDistance, 10000.0);
         
 
 
@@ -211,5 +216,14 @@
      *
      */
     ProxyPrimitive.prototype.destroy = function() {
+    
+        var len = this._objects.length;
+        for (var i=0; i<len; i++)
+        {           
+            this._objects[i].object.show = false;
+            this._primitives.remove(this._objects[i].object);
+            //this._objects[i].object.destroy();
+        }    
+        
         return Cesium.destroyObject(this);
     };
