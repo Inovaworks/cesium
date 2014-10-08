@@ -42,13 +42,14 @@ define([
     var axisScratch = new Cartesian3();
 
     ModelAnimationCache.getAnimationParameterValues = function(model, accessor) {
-        var key = getAnimationParameterKey(model, accessor);
+		var modelResources = model._modelResources;
+        var key = getAnimationParameterKey(modelResources, accessor);
         var values = cachedAnimationParameters[key];
 
         if (!defined(values)) {
             // Cache miss
-            var buffers = model._loadResources.buffers;
-            var gltf = model.gltf;
+            var buffers = modelResources.buffers;
+            var gltf = modelResources.gltf;
             var bufferViews = gltf.bufferViews;
 
             var bufferView = bufferViews[accessor.bufferView];
@@ -78,7 +79,10 @@ define([
             }
             // GLTF_SPEC: Support more parameter types when glTF supports targeting materials. https://github.com/KhronosGroup/glTF/issues/142
 
-            cachedAnimationParameters[key] = values;
+            if (model.basePath !== '') {
+                // Only cache when we can create a unique id
+                cachedAnimationParameters[key] = values;
+            }
         }
 
         return values;
@@ -135,7 +139,10 @@ define([
                 // GLTF_SPEC: Support new interpolators. https://github.com/KhronosGroup/glTF/issues/156
             }
 
-            cachedAnimationSplines[key] = spline;
+            if (model.basePath !== '') {
+                // Only cache when we can create a unique id
+                cachedAnimationSplines[key] = spline;
+            }
         }
 
         return spline;
