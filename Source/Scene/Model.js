@@ -271,7 +271,7 @@ define([
          * @default false
          */
         this.debugShowBoundingVolume = defaultValue(options.debugShowBoundingVolume, false);
-        this._debugShowBoudingVolume = this.debugShowBoundingVolume;
+        this._debugShowBoundingVolume = this.debugShowBoundingVolume;
 
         /**
          * This property is for debugging only; it is not for production use nor is it optimized.
