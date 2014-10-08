@@ -12,7 +12,7 @@
      *  Options:        
      *      fadeDistance    Not working yet
      */
-    var ProxyPrimitive = function(position, objects, primitives, options) {
+    var ProxyPrimitive = function(position, objects, options) {
 
         //>>includeStart('debug', pragmas.debug);
 
@@ -30,8 +30,13 @@
 
         this._position = position;
         this._objects = objects;
-        this._primitives = primitives;
+        
+        this._rotation = Cesium.defaultValue(options.rotation, 0.0);
+        
+        this._transformMatrix = Cesium.Matrix4.fromUniformScale(1.0, this._transformMatrix);
+        
         this._fadeDistance = Cesium.defaultValue(options.fadeDistance, 10000.0);
+        
 
 
         /**
@@ -65,37 +70,27 @@
          * @default false
          */
         this.debugShowBoundingVolume = Cesium.defaultValue(options.debugShowBoundingVolume, false);
-        
-        this._lastObject = undefined;
     };
-    
-    /*Cesium.defineProperties(ProxyPrimitive.prototype, {
-        show : {
-            set : function(value) {
-                    {
-                        var len = this._objects.length;
-                        for (var i=0; i<len; i++)
-                        {
-                            this._objects[i].object.show = value;
-                        }
-                    }
-                 }
-        }
-    
-    });*/
 
+    Cesium.defineProperties(ProxyPrimitive.prototype, {
+        position: {
+            get : function() {
+                return this._position;
+                },
+            
+              set : function(value) {
+                  this._position = value;
+              }
+            
+        }
+
+    });
+    
     /**
      * @private
      */
     ProxyPrimitive.prototype.update = function(context, frameState, commandList) {
         if (!this.show) {
-        
-            var len = this._objects.length;
-            for (var i=0; i<len; i++)
-            {
-                this._objects[i].object.show = false;
-            }
-        
             return;
         }
 
@@ -134,10 +129,24 @@
         }
         
         // make it visible
-        this._lastObject = this._objects[objindex];
-        this._lastObject.object.show = true;
-        if (Cesium.defined(this._lastObject.object.update)) {
-            this._lastObject.object.update(context, frameState, commandList);
+        this._objects[objindex].object.show = true;
+        
+        var targetObject = this._objects[objindex].object;
+        
+        if (Cesium.defined(targetObject.modelMatrix))
+        {
+            //var posMat =  Cesium.Transforms.eastNorthUpToFixedFrame(this._position);
+            var rotMat = Cesium.Matrix3.fromRotationY(this._rotation);            
+            targetObject.modelMatrix = Cesium.Matrix4.fromRotationTranslation(rotMat, this._position, this._transformMatrix);
+        }
+        else
+        {
+            targetObject.position = this._position;
+            targetObject.rotation = this._rotation;
+        }
+        
+        if (Cesium.defined(targetObject.update)) {              
+            targetObject.update(context, frameState, commandList);
         }
         
         // fade code disabled for now
@@ -202,14 +211,5 @@
      *
      */
     ProxyPrimitive.prototype.destroy = function() {
-    
-        var len = this._objects.length;
-        for (var i=0; i<len; i++)
-        {           
-            this._objects[i].object.show = false;
-            this._primitives.remove(this._objects[i].object);
-            //this._objects[i].object.destroy();
-        }
-    
         return Cesium.destroyObject(this);
     };

@@ -61,7 +61,7 @@
 
             if (show) {
                 position = Cesium.Property.getValueOrUndefined(entity._position, time, cachedPosition);
-                rotation = Cesium.Property.getValueOrDefault(entity._rotation, time, true);
+                rotation = Cesium.Property.getValueOrDefault(proxyGraphics.rotation, time, 0.0);
                 show = Cesium.defined(position);
             }
 
