@@ -141,7 +141,7 @@
         if (Cesium.defined(targetObject.modelMatrix))
         {
             
-            var rotation = Cesium.Matrix3.fromRotationZ(this._rotation);                        
+            var rotation = Cesium.Matrix3.fromRotationZ(this._rotation + Math.PI * 0.5); 
             var rotMat = new Cesium.Matrix4(rotation[0], rotation[3], rotation[6], 0.0,
                                rotation[1], rotation[4], rotation[7], 0.0,
                                rotation[2], rotation[5], rotation[8], 0.0,
