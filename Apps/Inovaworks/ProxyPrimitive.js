@@ -140,9 +140,16 @@
         
         if (Cesium.defined(targetObject.modelMatrix))
         {
-            //var posMat =  Cesium.Transforms.eastNorthUpToFixedFrame(this._position);
-            var rotMat = Cesium.Matrix3.fromRotationY(this._rotation);            
-            targetObject.modelMatrix = Cesium.Matrix4.fromRotationTranslation(rotMat, this._position, this._transformMatrix);
+            
+            var rotation = Cesium.Matrix3.fromRotationZ(this._rotation);                        
+            var rotMat = new Cesium.Matrix4(rotation[0], rotation[3], rotation[6], 0.0,
+                               rotation[1], rotation[4], rotation[7], 0.0,
+                               rotation[2], rotation[5], rotation[8], 0.0,
+                                       0.0,         0.0,         0.0,           1.0);
+                                       
+            var posMat =  Cesium.Transforms.eastNorthUpToFixedFrame(this._position);                                       
+            
+            targetObject.modelMatrix = Cesium.Matrix4.multiply(posMat, rotMat, this._transformMatrix);             
         }
         else
         {
