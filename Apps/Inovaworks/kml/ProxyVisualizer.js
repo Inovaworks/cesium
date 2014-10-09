@@ -93,6 +93,7 @@
                         show : true,
                         url : obj.uri,	
                         modelMatrix : modelMatrix,
+                        minimumPixelSize: obj.minimumPixelSize,
                         scale : obj.scale
                         });       
                         subobj = myModel;
