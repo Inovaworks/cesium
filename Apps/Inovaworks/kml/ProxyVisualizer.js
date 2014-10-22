@@ -56,12 +56,14 @@
 
             var position;
             var rotation = 0;
+            var scale = 1.0;
             var data = hash[entity.id];
             var show = entity.isAvailable(time) && Cesium.Property.getValueOrDefault(proxyGraphics._show, time, true);
 
             if (show) {
                 position = Cesium.Property.getValueOrUndefined(entity._position, time, cachedPosition);
                 rotation = Cesium.Property.getValueOrDefault(proxyGraphics.rotation, time, 0.0);
+                scale = Cesium.Property.getValueOrDefault(proxyGraphics.scale, time, 1.0);
                 show = Cesium.defined(position);
             }
 
@@ -90,6 +92,7 @@
                         //var modelMatrix = Cesium.Transforms.eastNorthUpToFixedFrame(position);
                         
                         var myModel = Cesium.Model.fromGltf({
+                        id: entity,
                         show : true,
                         url : obj.uri,	
                         modelMatrix : modelMatrix,
@@ -104,11 +107,12 @@
                         var billboards = this._scene.primitives.add(new Cesium.BillboardCollection());                        
                         
                         var myBillboard = billboards.add({        
+                        id: entity,
                         show : true,
                         position : position,
                         rotation:  rotation,
                         image : obj.image,
-                        scale : Cesium.defaultValue(obj.scale, 1.0),
+                        scale : Cesium.defaultValue(obj.scale, 1.0) * scale,
                         color : Cesium.defaultValue(obj.color, Cesium.Color.WHITE),
                         });
                       
@@ -122,13 +126,14 @@
                 }
                 
             
-                primitive = new ProxyPrimitive(position, rotation, objects, this._primitives);
+                primitive = new ProxyPrimitive(position, rotation, scale, objects, this._primitives);
                 primitive.id = entity;
                 primitives.add(primitive);
 
                 data = {
                     primitive : primitive,
                     position : undefined,
+                    scale: undefined,
                     rotation: undefined
                 };
                 hash[entity.id] = data;
@@ -144,6 +149,11 @@
                 primitive.rotation = data.rotation;
             }
 
+            if (scale!=data.scale) {
+                data.scale = scale;
+                primitive.scale = data.scale;
+            }
+            
             primitive.show = true;
         }
         

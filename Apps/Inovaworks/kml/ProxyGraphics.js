@@ -32,12 +32,16 @@
          */
         objects : Cesium.createPropertyDescriptor('objects'),
 
+        scale : Cesium.createPropertyDescriptor('scale'),
+        rotation : Cesium.createPropertyDescriptor('rotation'),
+        
         /**
          * Gets or sets the boolean {@link Property} specifying the visibility of the objects
          * @memberof ProxyGraphics.prototype
          * @type {Property}
          */
         show : Cesium.createPropertyDescriptor('show')
+
     });
 
     /**
@@ -53,6 +57,8 @@
         
         result.show = this.show;
         result.objects = this.objects;
+        result.rotation = this.rotation;
+        result.scale = this.scale;
         return result;
     };
 
@@ -70,6 +76,8 @@
         //>>includeEnd('debug');
 
         this.show = defaultValue(this.show, source.show);
+        this.scale = defaultValue(this.scale, source.scale);   
+        this.rotation = defaultValue(this.rotation, source.rotation);   
         this.objects = defaultValue(this.objects, source.objects);
     };
 
