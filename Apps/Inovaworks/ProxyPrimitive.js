@@ -12,7 +12,7 @@
      *  Options:        
      *      fadeDistance    Not working yet
      */
-    var ProxyPrimitive = function(position, rotation, objects, primitives, options) {
+    var ProxyPrimitive = function(position, rotation, scale, objects, primitives, options) {
 
         //>>includeStart('debug', pragmas.debug);
 
@@ -32,6 +32,7 @@
     
         this._position = position;
         this._rotation = rotation;
+        this._scale = scale;
         
         this._objects = objects;
         this._primitives = primitives;
@@ -86,6 +87,26 @@
             
               set : function(value) {
                   this._show = value;
+              }
+           },
+           
+        scale: {
+            get : function() {
+                return this._scale;
+                },
+            
+              set : function(value) {
+                  this._scale = value;
+              }
+            },
+
+        rotation: {
+            get : function() {
+                return this._rotation;
+                },
+            
+              set : function(value) {
+                  this._rotation = value;
               }
             },
             
@@ -176,6 +197,7 @@
         {
             targetObject.position = this._position;
             targetObject.rotation = this._rotation;
+            targetObject.scale = this._scale;
         }
         
         if (Cesium.defined(targetObject.update)) {              
