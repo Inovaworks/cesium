@@ -2,7 +2,6 @@
         
         
         var proxyData = packet.proxy;
-        console.log(proxyData);
         if (typeof proxyData === 'undefined') {
             return;
         }
