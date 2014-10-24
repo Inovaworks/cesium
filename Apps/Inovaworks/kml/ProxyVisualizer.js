@@ -92,7 +92,6 @@
                         //var modelMatrix = Cesium.Transforms.eastNorthUpToFixedFrame(position);
                         
                         var myModel = Cesium.Model.fromGltf({
-                        id: entity,
                         show : true,
                         url : obj.uri,	
                         modelMatrix : modelMatrix,
@@ -107,12 +106,12 @@
                         var billboards = this._scene.primitives.add(new Cesium.BillboardCollection());                        
                         
                         var myBillboard = billboards.add({        
-                        id: entity,
                         show : true,
                         position : position,
                         rotation:  rotation,
+                        scale: scale,
                         image : obj.image,
-                        scale : Cesium.defaultValue(obj.scale, 1.0) * scale,
+                        scale : Cesium.defaultValue(obj.scale, 1.0),
                         color : Cesium.defaultValue(obj.color, Cesium.Color.WHITE),
                         });
                       
@@ -133,8 +132,8 @@
                 data = {
                     primitive : primitive,
                     position : undefined,
-                    scale: undefined,
-                    rotation: undefined
+                    rotation: undefined,
+                    scale: undefined
                 };
                 hash[entity.id] = data;
             }

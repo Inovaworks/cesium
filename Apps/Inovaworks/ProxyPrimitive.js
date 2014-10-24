@@ -52,7 +52,7 @@
          *
          * @default true
          */
-        this.show = Cesium.defaultValue(options.show, true);
+        this._show = Cesium.defaultValue(options.show, true);
 
 
         /**
@@ -79,16 +79,17 @@
     };
 
     Cesium.defineProperties(ProxyPrimitive.prototype, {
-        rotation: {
+    
+        show: {
             get : function() {
-                return this._rotation;
+                return this._show;
                 },
             
               set : function(value) {
-                  this._rotation = value;
-              }            
-        },
-
+                  this._show = value;
+              }
+           },
+           
         scale: {
             get : function() {
                 return this._scale;
@@ -96,9 +97,19 @@
             
               set : function(value) {
                   this._scale = value;
-              }            
-        },
-        
+              }
+            },
+
+        rotation: {
+            get : function() {
+                return this._rotation;
+                },
+            
+              set : function(value) {
+                  this._rotation = value;
+              }
+            },
+            
         position: {
             get : function() {
                 return this._position;
@@ -106,9 +117,14 @@
             
               set : function(value) {
                   this._position = value;
-              }            
-        }
-        
+                  
+                  if (Cesium.defined(this._targetObject))
+                  {
+                    this._targetObject.object.show = value;
+                  }
+              }
+            }
+
     });
     
     /**
@@ -116,6 +132,12 @@
      */
     ProxyPrimitive.prototype.update = function(context, frameState, commandList) {
         if (!this.show) {
+            return;
+        }
+        
+        if (Cesium.defined(this._targetObject) && !this._targetObject.show)
+        {
+            this.show = false;
             return;
         }
 
@@ -153,10 +175,10 @@
             }            
         }
         
-        // make it visible
-        this._objects[objindex].object.show = true;
-        
+        // make it visible      
         var targetObject = this._objects[objindex].object;
+        targetObject.show = true;        
+        this._targetObject = targetObject;
         
         if (Cesium.defined(targetObject.modelMatrix))
         {
