@@ -120,7 +120,7 @@
                   
                   if (Cesium.defined(this._targetObject))
                   {
-                    this._targetObject.object.show = value;
+                    this._targetObject.show = value;
                   }
               }
             }

@@ -61,7 +61,7 @@
             var show = entity.isAvailable(time) && Cesium.Property.getValueOrDefault(proxyGraphics._show, time, true);
 
             if (show) {
-                position = Cesium.Property.getValueOrUndefined(entity._position, time, cachedPosition);
+                position = Cesium.Property.getValueOrUndefined(entity.position, time, cachedPosition);
                 rotation = Cesium.Property.getValueOrDefault(proxyGraphics.rotation, time, 0.0);
                 scale = Cesium.Property.getValueOrDefault(proxyGraphics.scale, time, 1.0);
                 show = Cesium.defined(position);
@@ -94,6 +94,8 @@
                         var myModel = Cesium.Model.fromGltf({
                         show : true,
                         url : obj.uri,	
+                        id: entity,
+                        
                         modelMatrix : modelMatrix,
                         minimumPixelSize: obj.minimumPixelSize,
                         scale : obj.scale
@@ -108,8 +110,8 @@
                         var myBillboard = billboards.add({        
                         show : true,
                         position : position,
-                        rotation:  rotation,
-                        scale: scale,
+                        rotation:  rotation,                        
+                        id: entity,
                         image : obj.image,
                         scale : Cesium.defaultValue(obj.scale, 1.0),
                         color : Cesium.defaultValue(obj.color, Cesium.Color.WHITE),
