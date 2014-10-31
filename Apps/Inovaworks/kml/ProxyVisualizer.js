@@ -31,6 +31,7 @@
     };
     
     var cachedPosition = new Cesium.Cartesian3();    
+    var proxy_billboards;
     
     /**
      * Updates all of the primitives created by this visualizer to match their
@@ -61,7 +62,7 @@
             var show = entity.isAvailable(time) && Cesium.Property.getValueOrDefault(proxyGraphics._show, time, true);
 
             if (show) {
-                position = Cesium.Property.getValueOrUndefined(entity.position, time, cachedPosition);
+                position = Cesium.Property.getValueOrUndefined(entity._position, time, cachedPosition);
                 rotation = Cesium.Property.getValueOrDefault(proxyGraphics.rotation, time, 0.0);
                 scale = Cesium.Property.getValueOrDefault(proxyGraphics.scale, time, 1.0);
                 show = Cesium.defined(position);
@@ -94,27 +95,28 @@
                         var myModel = Cesium.Model.fromGltf({
                         show : true,
                         url : obj.uri,	
-                        id: entity,
-                        
                         modelMatrix : modelMatrix,
                         minimumPixelSize: obj.minimumPixelSize,
-                        scale : obj.scale
+                        scale : obj.scale,
+                        id: entity
                         });       
                         subobj = myModel;
                     }
                     else
                     if (obj.type == "billboard")
                     {
-                        var billboards = this._scene.primitives.add(new Cesium.BillboardCollection());                        
+                        if (!Cesium.defined(proxy_billboards))
+                            proxy_billboards = this._scene.primitives.add(new Cesium.BillboardCollection());                        
                         
-                        var myBillboard = billboards.add({        
+                        var myBillboard = proxy_billboards.add({        
                         show : true,
                         position : position,
-                        rotation:  rotation,                        
-                        id: entity,
+                        rotation:  rotation,
+                        scale: scale,
                         image : obj.image,
-                        scale : Cesium.defaultValue(obj.scale, 1.0),
+                        //scale : Cesium.defaultValue(obj.scale, 1.0),
                         color : Cesium.defaultValue(obj.color, Cesium.Color.WHITE),
+                        id: entity
                         });
                       
                         subobj = myBillboard;
