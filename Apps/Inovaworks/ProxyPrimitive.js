@@ -159,6 +159,11 @@
             this.show = false;
             return;
         }
+        
+        if (!Cesium.defined(this._position)) {
+            this.show = false;
+            return;        
+        }        
 
         this._distanceToCamera = Cesium.Cartesian3.distance(this._position, frameState.camera.position);
         

@@ -55,7 +55,7 @@
             var entity = entities[i];
             var proxyGraphics = entity.proxy;
 
-            var position;
+            var position = cachedPosition;
             var rotation = 0;
             var scale = 1.0;
             var color;
@@ -130,18 +130,23 @@
                 }
                 
             
-                primitive = new ProxyPrimitive(position, rotation, scale, objects, this._primitives);
-                primitive.id = entity;
-                primitives.add(primitive);
+                if (Cesium.defined(position)) {
+                    primitive = new ProxyPrimitive(position, rotation, scale, objects, this._primitives);
+                    primitive.id = entity;
+                    primitives.add(primitive);
 
-                data = {
-                    primitive : primitive,
-                    color: undefined,
-                    position : undefined,
-                    rotation: undefined,
-                    scale: undefined
-                };
-                hash[entity.id] = data;
+                    data = {
+                        primitive : primitive,
+                        color: undefined,
+                        position : undefined,
+                        rotation: undefined,
+                        scale: undefined
+                    };
+                    hash[entity.id] = data;
+                }
+                else {
+                    continue;
+                }
             }
                        
             if (!Cesium.Cartesian3.equals(position, data.position)) {
