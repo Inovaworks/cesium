@@ -19,6 +19,7 @@
         Cesium.CzmlDataSource.processPacketData(Boolean, proxy, 'show', proxyData.show, interval, sourceUri);
         Cesium.CzmlDataSource.processPacketData(Number, proxy, 'rotation', proxyData.rotation, interval, sourceUri);
         Cesium.CzmlDataSource.processPacketData(Number, proxy, 'scale', proxyData.scale, interval, sourceUri);
+        Cesium.CzmlDataSource.processPacketData(Cesium.Color, proxy, 'color', proxyData.color, interval, sourceUri);
         //Cesium.CzmlDataSource.processPositionPacketData(dynamicObject, 'position', proxyData.position, interval, sourceUri);
 
          // TODO: should clone instead of assign

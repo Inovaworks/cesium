@@ -58,6 +58,7 @@
             var position;
             var rotation = 0;
             var scale = 1.0;
+            var color;
             var data = hash[entity.id];
             var show = entity.isAvailable(time) && Cesium.Property.getValueOrDefault(proxyGraphics._show, time, true);
 
@@ -65,7 +66,7 @@
                 position = Cesium.Property.getValueOrUndefined(entity._position, time, cachedPosition);
                 rotation = Cesium.Property.getValueOrDefault(proxyGraphics.rotation, time, 0.0);
                 scale = Cesium.Property.getValueOrDefault(proxyGraphics.scale, time, 1.0);
-                show = Cesium.defined(position);
+                color = Cesium.Property.getValueOrDefault(proxyGraphics.color, time, Cesium.Color.WHITE);
             }
 
             if (!show) {
@@ -112,10 +113,10 @@
                         show : true,
                         position : position,
                         rotation:  rotation,
+                        color:  color,
                         scale: scale,
                         image : obj.image,
-                        //scale : Cesium.defaultValue(obj.scale, 1.0),
-                        color : Cesium.defaultValue(obj.color, Cesium.Color.WHITE),
+                        //scale : Cesium.defaultValue(obj.scale, 1.0),                        
                         id: entity
                         });
                       
@@ -135,6 +136,7 @@
 
                 data = {
                     primitive : primitive,
+                    color: undefined,
                     position : undefined,
                     rotation: undefined,
                     scale: undefined
@@ -157,6 +159,11 @@
                 primitive.scale = data.scale;
             }
             
+            if (color!=data.color) {
+                data.color = color;
+                primitive.color = data.color;
+            }
+
             primitive.show = true;
         }
         
